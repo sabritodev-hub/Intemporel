@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +31,9 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [serverStatus, setServerStatus] = useState<
+    "checking" | "online" | "offline"
+  >("checking");
 
   const {
     register,
@@ -40,36 +43,57 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
+  // Vérifier la connexion au serveur au chargement
+  useEffect(() => {
+    const checkServerConnection = async () => {
+      console.log("🔍 [Login] Vérification connexion serveur...");
+      console.log(
+        "🔍 [Login] URL Supabase:",
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+      );
+
+      try {
+        const supabase = createClient();
+        console.log("🔍 [Login] Client Supabase créé");
+
+        const { data, error } = await supabase
+          .from("categories")
+          .select("id")
+          .limit(1);
+
+        console.log("🔍 [Login] Résultat requête:", {
+          data,
+          error: error?.message,
+        });
+
+        if (error) {
+          console.log("❌ [Login] Serveur OFFLINE - Erreur:", error.message);
+          setServerStatus("offline");
+        } else {
+          console.log("✅ [Login] Serveur ONLINE");
+          setServerStatus("online");
+        }
+      } catch (e: any) {
+        console.log("❌ [Login] Exception:", e?.message);
+        setServerStatus("offline");
+      }
+    };
+
+    checkServerConnection();
+  }, []);
+
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
-    console.log("🔐 [Login] Tentative de connexion avec:", data.email);
 
     try {
       const supabase = createClient();
-
-      // Vérifier la connexion à Supabase
-      console.log(
-        "🔧 [Login] URL Supabase:",
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-      );
-      console.log(
-        "🔧 [Login] Anon Key présente:",
-        !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      );
 
       const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
 
-      console.log("🔐 [Login] Résultat auth:", {
-        user: authData?.user?.email,
-        session: !!authData?.session,
-        error: error?.message,
-      });
-
       if (error) {
-        console.error("❌ [Login] Erreur:", error.message);
         toast({
           title: "Erreur de connexion",
           description: error.message,
@@ -78,9 +102,6 @@ export default function LoginPage() {
         return;
       }
 
-      console.log(
-        "✅ [Login] Connexion réussie! Redirection vers /admin/dashboard",
-      );
       toast({
         title: "Connexion réussie",
         description: "Bienvenue !",
@@ -89,7 +110,6 @@ export default function LoginPage() {
       router.push("/admin/dashboard");
       router.refresh();
     } catch (error) {
-      console.error("❌ [Login] Exception:", error);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue",
@@ -97,23 +117,6 @@ export default function LoginPage() {
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Test de connexion au chargement
-  const testConnection = async () => {
-    console.log("🧪 [Test] Vérification de la connexion Supabase...");
-    const supabase = createClient();
-
-    try {
-      const { data, error } = await supabase.from("categories").select("count");
-      if (error) {
-        console.error("❌ [Test] Erreur de connexion à la BDD:", error.message);
-      } else {
-        console.log("✅ [Test] Connexion à la BDD OK!");
-      }
-    } catch (e) {
-      console.error("❌ [Test] Exception:", e);
     }
   };
 
@@ -163,19 +166,28 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Bouton de test de connexion */}
-          <div className="mt-4 pt-4 border-t">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full text-sm"
-              onClick={testConnection}
-            >
-              🧪 Tester la connexion BDD
-            </Button>
-            <p className="mt-2 text-xs text-center text-muted-foreground">
-              Ouvrez la console (F12) pour voir les logs
-            </p>
+          {/* Pastille statut serveur */}
+          <div className="mt-4 pt-4 border-t flex items-center justify-center gap-2">
+            {console.log(
+              "🎨 [Login] Rendu pastille - serverStatus:",
+              serverStatus,
+            )}
+            <div
+              className={`h-2.5 w-2.5 rounded-full ${
+                serverStatus === "checking"
+                  ? "bg-yellow-400 animate-pulse"
+                  : serverStatus === "online"
+                    ? "bg-green-500"
+                    : "bg-red-500"
+              }`}
+            />
+            <span className="text-xs text-muted-foreground">
+              {serverStatus === "checking"
+                ? "Vérification..."
+                : serverStatus === "online"
+                  ? "Connexion serveur active"
+                  : "Serveur hors ligne"}
+            </span>
           </div>
         </CardContent>
       </Card>

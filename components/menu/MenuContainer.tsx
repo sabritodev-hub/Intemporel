@@ -1,34 +1,41 @@
-'use client'
+"use client";
 
-import { useState, useMemo } from 'react'
-import { AnimatePresence } from 'framer-motion'
-import CategoryFilter from './CategoryFilter'
-import PlatCard from './PlatCard'
-import PlatModal from './PlatModal'
-import { Category, Plat, Option, OptionType } from '@/types/database.types'
+import { useState, useMemo } from "react";
+import { AnimatePresence } from "framer-motion";
+import CategoryFilter from "./CategoryFilter";
+import PlatCard from "./PlatCard";
+import PlatModal from "./PlatModal";
+import { Category, Plat, Option, OptionType } from "@/types/database.types";
 
 interface PlatWithRelations extends Plat {
-  categories: Category
+  categories: Category;
   plat_options: {
     options: Option & {
-      option_types: OptionType
-    }
-  }[]
+      option_types: OptionType;
+    };
+  }[];
 }
 
 interface MenuContainerProps {
-  categories: Category[]
-  plats: PlatWithRelations[]
+  categories: Category[];
+  plats: PlatWithRelations[];
+  showCounterButton?: boolean;
 }
 
-export default function MenuContainer({ categories, plats }: MenuContainerProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [selectedPlat, setSelectedPlat] = useState<PlatWithRelations | null>(null)
+export default function MenuContainer({
+  categories,
+  plats,
+  showCounterButton = true,
+}: MenuContainerProps) {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedPlat, setSelectedPlat] = useState<PlatWithRelations | null>(
+    null,
+  );
 
   const filteredPlats = useMemo(() => {
-    if (!selectedCategory) return plats
-    return plats.filter((plat) => plat.categories?.slug === selectedCategory)
-  }, [plats, selectedCategory])
+    if (!selectedCategory) return plats;
+    return plats.filter((plat) => plat.categories?.slug === selectedCategory);
+  }, [plats, selectedCategory]);
 
   return (
     <div className="container py-8">
@@ -76,8 +83,9 @@ export default function MenuContainer({ categories, plats }: MenuContainerProps)
         <PlatModal
           plat={selectedPlat}
           onClose={() => setSelectedPlat(null)}
+          showCounterButton={showCounterButton}
         />
       )}
     </div>
-  )
+  );
 }
