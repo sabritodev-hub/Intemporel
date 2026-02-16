@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 43 29% 90%;
+    --foreground: 345 100% 25%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 345 100% 25%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 345 100% 25%;
+
+    --primary: 345 100% 25%;
+    --primary-foreground: 43 29% 90%;
+
+    --secondary: 43 29% 85%;
+    --secondary-foreground: 345 100% 25%;
+
+    --muted: 43 29% 85%;
+    --muted-foreground: 345 50% 40%;
+
+    --accent: 345 100% 30%;
+    --accent-foreground: 43 29% 90%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 345 30% 80%;
+    --input: 345 30% 80%;
+    --ring: 345 100% 25%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 345 50% 10%;
+    --foreground: 43 29% 90%;
+
+    --card: 345 50% 15%;
+    --card-foreground: 43 29% 90%;
+
+    --popover: 345 50% 15%;
+    --popover-foreground: 43 29% 90%;
+
+    --primary: 43 29% 90%;
+    --primary-foreground: 345 100% 25%;
+
+    --secondary: 345 50% 20%;
+    --secondary-foreground: 43 29% 90%;
+
+    --muted: 345 50% 20%;
+    --muted-foreground: 43 29% 70%;
+
+    --accent: 345 100% 30%;
+    --accent-foreground: 43 29% 90%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 345 50% 25%;
+    --input: 345 50% 25%;
+    --ring: 43 29% 90%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-montserrat;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-playfair;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #E8E8CC;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #800020;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A0223B;
+}
