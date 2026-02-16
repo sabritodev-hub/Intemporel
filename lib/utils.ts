@@ -25,8 +25,25 @@ export function formatPrice(price: number): string {
 }
 
 export function getImageUrl(path: string | null): string {
-  if (!path) return "/images/placeholder-dessert.svg";
-  if (path.startsWith("http")) return path;
+  console.log("🖼️ [getImageUrl] Input path:", path);
+
+  if (!path) {
+    console.log("🖼️ [getImageUrl] No path, using placeholder");
+    return "/images/placeholder-dessert.svg";
+  }
+
+  if (path.startsWith("http")) {
+    console.log("🖼️ [getImageUrl] Path is already a full URL:", path);
+    return path;
+  }
+
   const bucket = process.env.NEXT_PUBLIC_STORAGE_BUCKET || "desserts-images";
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const fullUrl = `${supabaseUrl}/storage/v1/object/public/${bucket}/${path}`;
+
+  console.log("🖼️ [getImageUrl] Bucket:", bucket);
+  console.log("🖼️ [getImageUrl] Supabase URL:", supabaseUrl);
+  console.log("🖼️ [getImageUrl] Full URL:", fullUrl);
+
+  return fullUrl;
 }
