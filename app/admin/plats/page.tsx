@@ -26,6 +26,13 @@ async function getPlats() {
     console.error("Error fetching plats:", error);
     return [];
   }
+
+  // Log pour débugger les images
+  console.log("📋 [Plats] Nombre de plats:", data?.length);
+  data?.forEach((plat: any) => {
+    console.log(`📋 [Plats] ${plat.name} - image:`, plat.image);
+  });
+
   return data || [];
 }
 

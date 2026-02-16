@@ -167,6 +167,9 @@ export default function ImageUpload({
     const randomString = Math.random().toString(36).substring(2, 8);
     const filename = `${timestamp}-${randomString}.webp`;
 
+    console.log("📤 [Upload] Bucket:", bucket);
+    console.log("📤 [Upload] Filename:", filename);
+
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage
       .from(bucket)
@@ -175,8 +178,12 @@ export default function ImageUpload({
         upsert: false,
       });
 
-    if (error) throw error;
+    if (error) {
+      console.error("📤 [Upload] Error:", error);
+      throw error;
+    }
 
+    console.log("📤 [Upload] Success! Path saved:", data.path);
     return data.path;
   };
 
@@ -273,9 +280,19 @@ export default function ImageUpload({
     onChange(null);
   };
 
+  // Log pour débugger l'affichage de l'image
+  console.log("🖼️ [ImageUpload] value:", value);
+  console.log("🖼️ [ImageUpload] bucket:", bucket);
+  console.log(
+    "🖼️ [ImageUpload] SUPABASE_URL:",
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+  );
+
   const imageUrl = value
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${value}`
     : null;
+
+  console.log("🖼️ [ImageUpload] Final imageUrl:", imageUrl);
 
   // Mode Cropper
   if (imageToCrop) {
