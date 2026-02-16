@@ -46,14 +46,35 @@ export default function LoginPage() {
   // Vérifier la connexion au serveur au chargement
   useEffect(() => {
     const checkServerConnection = async () => {
+      console.log("🔍 [Login] Vérification connexion serveur...");
+      console.log(
+        "🔍 [Login] URL Supabase:",
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+      );
+
       try {
         const supabase = createClient();
-        const { error } = await supabase
+        console.log("🔍 [Login] Client Supabase créé");
+
+        const { data, error } = await supabase
           .from("categories")
           .select("id")
           .limit(1);
-        setServerStatus(error ? "offline" : "online");
-      } catch (e) {
+
+        console.log("🔍 [Login] Résultat requête:", {
+          data,
+          error: error?.message,
+        });
+
+        if (error) {
+          console.log("❌ [Login] Serveur OFFLINE - Erreur:", error.message);
+          setServerStatus("offline");
+        } else {
+          console.log("✅ [Login] Serveur ONLINE");
+          setServerStatus("online");
+        }
+      } catch (e: any) {
+        console.log("❌ [Login] Exception:", e?.message);
         setServerStatus("offline");
       }
     };
@@ -147,6 +168,10 @@ export default function LoginPage() {
 
           {/* Pastille statut serveur */}
           <div className="mt-4 pt-4 border-t flex items-center justify-center gap-2">
+            {console.log(
+              "🎨 [Login] Rendu pastille - serverStatus:",
+              serverStatus,
+            )}
             <div
               className={`h-2.5 w-2.5 rounded-full ${
                 serverStatus === "checking"

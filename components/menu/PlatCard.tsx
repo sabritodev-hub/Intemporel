@@ -1,13 +1,13 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { formatPrice, getImageUrl } from '@/lib/utils'
-import { Plat, Category } from '@/types/database.types'
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { formatPrice, getImageUrl } from "@/lib/utils";
+import { Plat, Category } from "@/types/database.types";
 
 interface PlatCardProps {
-  plat: Plat & { categories: Category }
-  onClick: () => void
+  plat: Plat & { categories: Category };
+  onClick: () => void;
 }
 
 export default function PlatCard({ plat, onClick }: PlatCardProps) {
@@ -28,6 +28,7 @@ export default function PlatCard({ plat, onClick }: PlatCardProps) {
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-110"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          unoptimized
         />
         {!plat.available && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50">
@@ -61,5 +62,5 @@ export default function PlatCard({ plat, onClick }: PlatCardProps) {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }

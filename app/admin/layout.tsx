@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   Sliders,
+  Eye,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -113,16 +114,26 @@ export default function AdminLayout({
       {/* Main content */}
       <div className="flex flex-1 flex-col">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-bordeaux/10 bg-beige-light px-4 lg:px-6">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="rounded-md p-1 text-bordeaux hover:bg-bordeaux/10 lg:hidden"
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-bordeaux/10 bg-beige-light px-4 lg:px-6">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="rounded-md p-1 text-bordeaux hover:bg-bordeaux/10 lg:hidden"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+            <h1 className="font-playfair text-lg font-semibold text-bordeaux lg:text-xl">
+              Administration
+            </h1>
+          </div>
+          <Link
+            href="/"
+            target="_blank"
+            className="flex items-center gap-2 rounded-lg bg-bordeaux px-3 py-2 font-montserrat text-sm text-beige-light hover:bg-bordeaux/90 transition-colors"
           >
-            <Menu className="h-6 w-6" />
-          </button>
-          <h1 className="font-playfair text-lg font-semibold text-bordeaux lg:text-xl">
-            Administration
-          </h1>
+            <Eye className="h-4 w-4" />
+            <span className="hidden sm:inline">Voir le menu</span>
+          </Link>
         </header>
 
         {/* Page content */}

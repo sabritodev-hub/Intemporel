@@ -1,11 +1,14 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { Plus, Pencil, Trash2 } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { formatPrice, getImageUrl } from '@/lib/utils'
-import { DeletePlatButton, ToggleAvailabilitySwitch } from './client-components'
+import Link from "next/link";
+import Image from "next/image";
+import { Plus, Pencil, Trash2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { formatPrice, getImageUrl } from "@/lib/utils";
+import {
+  DeletePlatButton,
+  ToggleAvailabilitySwitch,
+} from "./client-components";
 
 async function getPlats() {
   const supabase = createClient();
@@ -27,7 +30,7 @@ async function getPlats() {
 }
 
 export default async function PlatsPage() {
-  const plats = await getPlats()
+  const plats = await getPlats();
 
   return (
     <div className="space-y-6">
@@ -70,6 +73,7 @@ export default async function PlatsPage() {
                   alt={plat.name}
                   fill
                   className="object-cover"
+                  unoptimized
                 />
                 {!plat.available && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/50">

@@ -113,6 +113,7 @@ export default function PlatModal({
                 fill
                 className="object-cover"
                 priority
+                unoptimized
               />
               {!plat.available && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50">
