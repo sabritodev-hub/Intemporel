@@ -42,7 +42,7 @@ async function getPlats() {
   return data || [];
 }
 
-async function getSiteConfig(key: string) {
+async function getSiteConfig(key: string): Promise<string | null> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("site_config")
@@ -50,12 +50,11 @@ async function getSiteConfig(key: string) {
     .eq("key", key)
     .single();
 
-  if (error) {
+  if (error || !data) {
     // Si la config n'existe pas encore, retourner la valeur par défaut
-    console.log("Config not found:", key);
     return null;
   }
-  return data?.value;
+  return (data as { value: string | null }).value;
 }
 
 export default async function HomePage() {
