@@ -27,5 +27,6 @@ export function formatPrice(price: number): string {
 export function getImageUrl(path: string | null): string {
   if (!path) return "/images/placeholder-dessert.svg";
   if (path.startsWith("http")) return path;
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${process.env.NEXT_PUBLIC_STORAGE_BUCKET}/${path}`;
+  const bucket = process.env.NEXT_PUBLIC_STORAGE_BUCKET || "desserts-images";
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
 }
