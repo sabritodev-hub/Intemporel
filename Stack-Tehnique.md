@@ -7,25 +7,25 @@ Site web servant de menu digital pour un bar à desserts avec interface d'admini
 ### Fonctionnalités Principales
 
 #### Interface Client (Public)
-- **Page Menu** : Affichage de tous les desserts organisés par catégories
+- **Page Menu** : Affichage de tous les plats organisés par catégories
 - Navigation intuitive entre les catégories
-- Affichage des prix, photos et disponibilité des desserts
-- Personnalisation des commandes via options (sauce, parfum, taille)
+- Affichage des prix, photos et disponibilité des plats
+- Personnalisation des commandes via options définissables par l'admin
 - Design élégant : fond beige clair avec textes bordeaux
 
 #### Interface Admin (Privé)
 - **Authentification sécurisée** pour l'administrateur
-- **Gestion complète des desserts** :
-  - Ajouter/Modifier/Supprimer des desserts
+- **Gestion complète des plats** :
+  - Ajouter/Modifier/Supprimer des plats
   - Gestion des photos
   - Définition des prix
   - Gestion des catégories
   - Contrôle de la disponibilité (en stock/rupture)
-- **Gestion des options personnalisables** :
-  - Définir les sauces disponibles
-  - Définir les parfums
-  - Définir les tailles
-  - Associer les options aux desserts
+- **Gestion des options entièrement personnalisables** :
+  - Créer des types d'options personnalisés (ex: sauce, parfum, taille, garniture, etc.)
+  - Définir les choix disponibles pour chaque type d'option
+  - Associer les options aux plats selon les besoins
+  - Définir un prix additionnel par option (optionnel)
 
 ---
 
@@ -110,7 +110,7 @@ Site web servant de menu digital pour un bar à desserts avec interface d'admini
 -- Extension pour UUID
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Catégories de desserts
+-- Catégories de plats
 CREATE TABLE categories (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT UNIQUE NOT NULL,
@@ -120,8 +120,8 @@ CREATE TABLE categories (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- Desserts
-CREATE TABLE desserts (
+-- Plats
+CREATE TABLE plats (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
@@ -134,30 +134,33 @@ CREATE TABLE desserts (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- Types d'options (sauce, parfum, taille)
+-- Types d'options (définissables par l'admin)
+-- Exemples : "Sauce", "Parfum", "Taille", "Garniture", "Supplément", etc.
 CREATE TABLE option_types (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT UNIQUE NOT NULL, -- "Sauce", "Parfum", "Taille"
+  name TEXT UNIQUE NOT NULL, -- Nom du type d'option (ex: "Sauce", "Taille")
   slug TEXT UNIQUE NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- Options disponibles
+-- Options disponibles pour chaque type
+-- L'admin définit les choix pour chaque type d'option
 CREATE TABLE options (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT NOT NULL,
-  price_modifier DECIMAL(10, 2), -- Prix additionnel (peut être NULL)
+  name TEXT NOT NULL, -- Nom de l'option (ex: "Caramel", "Chocolat", "Petite", "Grande")
+  price_modifier DECIMAL(10, 2), -- Prix additionnel (peut être NULL si gratuit)
   option_type_id UUID NOT NULL REFERENCES option_types(id) ON DELETE CASCADE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- Relation many-to-many entre Desserts et Options
-CREATE TABLE dessert_options (
-  dessert_id UUID NOT NULL REFERENCES desserts(id) ON DELETE CASCADE,
+-- Relation many-to-many entre Plats et Options
+-- Permet d'associer plusieurs options à un plat
+CREATE TABLE plat_options (
+  plat_id UUID NOT NULL REFERENCES plats(id) ON DELETE CASCADE,
   option_id UUID NOT NULL REFERENCES options(id) ON DELETE CASCADE,
-  PRIMARY KEY (dessert_id, option_id)
+  PRIMARY KEY (plat_id, option_id)
 );
 
 -- Administrateurs (utilise Supabase Auth, mais table supplémentaire pour profil)
@@ -169,11 +172,11 @@ CREATE TABLE admin_profiles (
 );
 
 -- Indexes pour les performances
-CREATE INDEX idx_desserts_category_id ON desserts(category_id);
-CREATE INDEX idx_desserts_available ON desserts(available);
+CREATE INDEX idx_plats_category_id ON plats(category_id);
+CREATE INDEX idx_plats_available ON plats(available);
 CREATE INDEX idx_options_option_type_id ON options(option_type_id);
-CREATE INDEX idx_dessert_options_dessert_id ON dessert_options(dessert_id);
-CREATE INDEX idx_dessert_options_option_id ON dessert_options(option_id);
+CREATE INDEX idx_plat_options_plat_id ON plat_options(plat_id);
+CREATE INDEX idx_plat_options_option_id ON plat_options(option_id);
 
 -- Trigger pour mettre à jour updated_at automatiquement
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -188,7 +191,7 @@ $$ language 'plpgsql';
 CREATE TRIGGER update_categories_updated_at BEFORE UPDATE ON categories
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_desserts_updated_at BEFORE UPDATE ON desserts
+CREATE TRIGGER update_plats_updated_at BEFORE UPDATE ON plats
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_option_types_updated_at BEFORE UPDATE ON option_types
@@ -201,15 +204,47 @@ CREATE TRIGGER update_admin_profiles_updated_at BEFORE UPDATE ON admin_profiles
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 ```
 
+### Exemple de Données
+
+```sql
+-- Exemple : Créer des types d'options personnalisés
+INSERT INTO option_types (name, slug) VALUES
+  ('Sauce', 'sauce'),
+  ('Taille', 'taille'),
+  ('Parfum', 'parfum'),
+  ('Garniture', 'garniture'),
+  ('Supplément', 'supplement');
+
+-- Exemple : Créer des options pour le type "Sauce"
+INSERT INTO options (name, price_modifier, option_type_id) 
+SELECT 'Caramel', 0.50, id FROM option_types WHERE slug = 'sauce';
+
+INSERT INTO options (name, price_modifier, option_type_id) 
+SELECT 'Chocolat', 0.50, id FROM option_types WHERE slug = 'sauce';
+
+INSERT INTO options (name, price_modifier, option_type_id) 
+SELECT 'Coulis de fraise', 0.75, id FROM option_types WHERE slug = 'sauce';
+
+-- Exemple : Options pour le type "Taille"
+INSERT INTO options (name, price_modifier, option_type_id) 
+SELECT 'Petite', 0.00, id FROM option_types WHERE slug = 'taille';
+
+INSERT INTO options (name, price_modifier, option_type_id) 
+SELECT 'Moyenne', 1.50, id FROM option_types WHERE slug = 'taille';
+
+INSERT INTO options (name, price_modifier, option_type_id) 
+SELECT 'Grande', 3.00, id FROM option_types WHERE slug = 'taille';
+```
+
 ### Row Level Security (RLS) Policies
 
 ```sql
 -- Activer RLS sur toutes les tables
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
-ALTER TABLE desserts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE plats ENABLE ROW LEVEL SECURITY;
 ALTER TABLE option_types ENABLE ROW LEVEL SECURITY;
 ALTER TABLE options ENABLE ROW LEVEL SECURITY;
-ALTER TABLE dessert_options ENABLE ROW LEVEL SECURITY;
+ALTER TABLE plat_options ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_profiles ENABLE ROW LEVEL SECURITY;
 
 -- Policies pour les catégories
@@ -223,13 +258,13 @@ CREATE POLICY "Categories are editable by admins only"
     SELECT 1 FROM admin_profiles WHERE id = auth.uid()
   ));
 
--- Policies pour les desserts
-CREATE POLICY "Desserts are viewable by everyone"
-  ON desserts FOR SELECT
+-- Policies pour les plats
+CREATE POLICY "Plats are viewable by everyone"
+  ON plats FOR SELECT
   USING (true);
 
-CREATE POLICY "Desserts are editable by admins only"
-  ON desserts FOR ALL
+CREATE POLICY "Plats are editable by admins only"
+  ON plats FOR ALL
   USING (auth.role() = 'authenticated' AND EXISTS (
     SELECT 1 FROM admin_profiles WHERE id = auth.uid()
   ));
@@ -256,13 +291,13 @@ CREATE POLICY "Options are editable by admins only"
     SELECT 1 FROM admin_profiles WHERE id = auth.uid()
   ));
 
--- Policies pour dessert_options
-CREATE POLICY "Dessert options are viewable by everyone"
-  ON dessert_options FOR SELECT
+-- Policies pour plat_options
+CREATE POLICY "Plat options are viewable by everyone"
+  ON plat_options FOR SELECT
   USING (true);
 
-CREATE POLICY "Dessert options are editable by admins only"
-  ON dessert_options FOR ALL
+CREATE POLICY "Plat options are editable by admins only"
+  ON plat_options FOR ALL
   USING (auth.role() = 'authenticated' AND EXISTS (
     SELECT 1 FROM admin_profiles WHERE id = auth.uid()
   ));
@@ -310,7 +345,7 @@ export type Database = {
           updated_at?: string
         }
       }
-      desserts: {
+      plats: {
         Row: {
           id: string
           name: string
@@ -348,7 +383,7 @@ export type Database = {
           updated_at?: string
         }
       }
-      // ... autres tables
+      // ... autres tables (option_types, options, plat_options)
     }
   }
 }
@@ -607,17 +642,17 @@ SUPABASE_SERVICE_ROLE_KEY=...
 │   │   │   └── page.tsx
 │   │   ├── dashboard/
 │   │   │   └── page.tsx
-│   │   ├── desserts/
-│   │   │   ├── page.tsx          # Liste desserts
+│   │   ├── plats/
+│   │   │   ├── page.tsx          # Liste des plats
 │   │   │   ├── new/
-│   │   │   │   └── page.tsx      # Nouveau dessert
+│   │   │   │   └── page.tsx      # Nouveau plat
 │   │   │   └── [id]/
 │   │   │       └── edit/
-│   │   │           └── page.tsx  # Éditer dessert
+│   │   │           └── page.tsx  # Éditer plat
 │   │   ├── categories/
 │   │   │   └── page.tsx
 │   │   ├── options/
-│   │   │   └── page.tsx
+│   │   │   └── page.tsx          # Gérer types d'options et options
 │   │   └── layout.tsx
 │   ├── api/
 │   │   └── auth/
@@ -628,11 +663,12 @@ SUPABASE_SERVICE_ROLE_KEY=...
 │   ├── ui/                        # shadcn components
 │   ├── menu/
 │   │   ├── CategoryFilter.tsx
-│   │   ├── DessertCard.tsx
-│   │   └── DessertModal.tsx
+│   │   ├── PlatCard.tsx
+│   │   └── PlatModal.tsx          # Modal avec options personnalisables
 │   └── admin/
-│       ├── DessertForm.tsx
-│       ├── OptionManager.tsx
+│       ├── PlatForm.tsx
+│       ├── OptionTypeManager.tsx  # Gérer les types d'options
+│       ├── OptionManager.tsx      # Gérer les options
 │       └── ImageUpload.tsx
 ├── lib/
 │   ├── supabase/
