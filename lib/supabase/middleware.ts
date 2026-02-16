@@ -1,76 +1,61 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
+  // Vérifier que les variables d'environnement sont définies
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
-        },
-      },
-    },
-  );
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Protected routes - admin
-  if (
-    request.nextUrl.pathname.startsWith("/admin") &&
-    !request.nextUrl.pathname.startsWith("/admin/login")
-  ) {
-    if (!user) {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
-    }
+  if (!supabaseUrl || !supabaseKey) {
+    // Si pas de config Supabase, laisser passer la requête
+    return NextResponse.next();
   }
 
-  // Redirect logged in users away from login page
-  if (request.nextUrl.pathname === "/admin/login" && user) {
-    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+  let response = NextResponse.next({
+    request,
+  });
+
+  try {
+    const supabase = createServerClient(supabaseUrl, supabaseKey, {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            request.cookies.set(name, value),
+          );
+          response = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options),
+          );
+        },
+      },
+    });
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    // Protected routes - admin
+    if (
+      request.nextUrl.pathname.startsWith("/admin") &&
+      !request.nextUrl.pathname.startsWith("/admin/login")
+    ) {
+      if (!user) {
+        return NextResponse.redirect(new URL("/admin/login", request.url));
+      }
+    }
+
+    // Redirect logged in users away from login page
+    if (request.nextUrl.pathname === "/admin/login" && user) {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
+  } catch (e) {
+    // En cas d'erreur, laisser passer la requête
+    console.error("Middleware error:", e);
   }
 
   return response;
