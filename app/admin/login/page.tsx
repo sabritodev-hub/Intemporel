@@ -46,35 +46,14 @@ export default function LoginPage() {
   // Vérifier la connexion au serveur au chargement
   useEffect(() => {
     const checkServerConnection = async () => {
-      console.log("🔍 [Login] Vérification connexion serveur...");
-      console.log(
-        "🔍 [Login] URL Supabase:",
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-      );
-
       try {
         const supabase = createClient();
-        console.log("🔍 [Login] Client Supabase créé");
-
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from("categories")
           .select("id")
           .limit(1);
-
-        console.log("🔍 [Login] Résultat requête:", {
-          data,
-          error: error?.message,
-        });
-
-        if (error) {
-          console.log("❌ [Login] Serveur OFFLINE - Erreur:", error.message);
-          setServerStatus("offline");
-        } else {
-          console.log("✅ [Login] Serveur ONLINE");
-          setServerStatus("online");
-        }
-      } catch (e: any) {
-        console.log("❌ [Login] Exception:", e?.message);
+        setServerStatus(error ? "offline" : "online");
+      } catch (e) {
         setServerStatus("offline");
       }
     };
@@ -88,7 +67,7 @@ export default function LoginPage() {
     try {
       const supabase = createClient();
 
-      const { data: authData, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
@@ -117,6 +96,28 @@ export default function LoginPage() {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const getStatusColor = () => {
+    switch (serverStatus) {
+      case "checking":
+        return "bg-yellow-400 animate-pulse";
+      case "online":
+        return "bg-green-500";
+      case "offline":
+        return "bg-red-500";
+    }
+  };
+
+  const getStatusText = () => {
+    switch (serverStatus) {
+      case "checking":
+        return "Vérification...";
+      case "online":
+        return "Connexion serveur active";
+      case "offline":
+        return "Serveur hors ligne";
     }
   };
 
@@ -168,25 +169,9 @@ export default function LoginPage() {
 
           {/* Pastille statut serveur */}
           <div className="mt-4 pt-4 border-t flex items-center justify-center gap-2">
-            {console.log(
-              "🎨 [Login] Rendu pastille - serverStatus:",
-              serverStatus,
-            )}
-            <div
-              className={`h-2.5 w-2.5 rounded-full ${
-                serverStatus === "checking"
-                  ? "bg-yellow-400 animate-pulse"
-                  : serverStatus === "online"
-                    ? "bg-green-500"
-                    : "bg-red-500"
-              }`}
-            />
+            <div className={`h-2.5 w-2.5 rounded-full ${getStatusColor()}`} />
             <span className="text-xs text-muted-foreground">
-              {serverStatus === "checking"
-                ? "Vérification..."
-                : serverStatus === "online"
-                  ? "Connexion serveur active"
-                  : "Serveur hors ligne"}
+              {getStatusText()}
             </span>
           </div>
         </CardContent>

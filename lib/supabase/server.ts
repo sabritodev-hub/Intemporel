@@ -5,23 +5,6 @@ import { Database } from "@/types/database.types";
 export function createClient() {
   const cookieStore = cookies();
 
-  // Log de debug pour vérifier les variables d'environnement
-  console.log(
-    "🔧 [Supabase Server] URL configurée:",
-    process.env.NEXT_PUBLIC_SUPABASE_URL ? "✅ Définie" : "❌ Non définie",
-  );
-  console.log(
-    "🔧 [Supabase Server] Anon Key:",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "✅ Définie" : "❌ Non définie",
-  );
-
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  ) {
-    console.error("❌ [Supabase Server] Variables d'environnement manquantes!");
-  }
-
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -34,18 +17,14 @@ export function createClient() {
           try {
             cookieStore.set({ name, value, ...options });
           } catch (error) {
-            // The `set` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
+            // Ignore errors from Server Components
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: "", ...options });
           } catch (error) {
-            // The `delete` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
+            // Ignore errors from Server Components
           }
         },
       },

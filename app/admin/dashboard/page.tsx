@@ -8,8 +8,6 @@ import {
 } from "lucide-react";
 
 async function getStats() {
-  console.log("📊 [Dashboard] Chargement des statistiques...");
-
   const supabase = createClient();
 
   const [platsResult, categoriesResult, optionTypesResult] = await Promise.all([
@@ -17,31 +15,6 @@ async function getStats() {
     supabase.from("categories").select("id", { count: "exact" }),
     supabase.from("option_types").select("id", { count: "exact" }),
   ]);
-
-  console.log("📊 [Dashboard] Résultats:", {
-    plats: { count: platsResult.count, error: platsResult.error?.message },
-    categories: {
-      count: categoriesResult.count,
-      error: categoriesResult.error?.message,
-    },
-    optionTypes: {
-      count: optionTypesResult.count,
-      error: optionTypesResult.error?.message,
-    },
-  });
-
-  if (platsResult.error) {
-    console.error("❌ [Dashboard] Erreur plats:", platsResult.error);
-  }
-  if (categoriesResult.error) {
-    console.error("❌ [Dashboard] Erreur categories:", categoriesResult.error);
-  }
-  if (optionTypesResult.error) {
-    console.error(
-      "❌ [Dashboard] Erreur option_types:",
-      optionTypesResult.error,
-    );
-  }
 
   const availablePlats =
     platsResult.data?.filter((p) => p.available).length || 0;
@@ -55,11 +28,7 @@ async function getStats() {
 }
 
 export default async function DashboardPage() {
-  console.log("📊 [Dashboard] Rendu de la page dashboard");
-
   const stats = await getStats();
-
-  console.log("📊 [Dashboard] Stats finales:", stats);
 
   const cards = [
     {
@@ -143,16 +112,6 @@ export default async function DashboardPage() {
               personnalisations
             </li>
           </ul>
-
-          {/* Debug info */}
-          <div className="mt-6 p-4 bg-beige-darker rounded-lg text-sm">
-            <p className="font-semibold mb-2">🔧 Debug Info:</p>
-            <ul className="space-y-1 text-xs">
-              <li>Plats: {stats.totalPlats}</li>
-              <li>Catégories: {stats.totalCategories}</li>
-              <li>Types d'options: {stats.totalOptionTypes}</li>
-            </ul>
-          </div>
         </CardContent>
       </Card>
     </div>

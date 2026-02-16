@@ -3,6 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
+import {
+  CategoryInsert,
+  CategoryUpdate,
+  PlatInsert,
+  PlatUpdate,
+  OptionTypeInsert,
+  OptionTypeUpdate,
+  OptionInsert,
+  OptionUpdate,
+} from "@/types/database.types";
 
 // ==================== CATEGORIES ====================
 
@@ -12,11 +22,13 @@ export async function createCategory(formData: FormData) {
   const name = formData.get("name") as string;
   const order = parseInt(formData.get("order") as string) || 0;
 
-  const { error } = await supabase.from("categories").insert({
+  const insertData: CategoryInsert = {
     name,
     slug: slugify(name),
     order,
-  });
+  };
+
+  const { error } = await supabase.from("categories").insert(insertData);
 
   if (error) {
     return { error: error.message };
@@ -33,13 +45,15 @@ export async function updateCategory(id: string, formData: FormData) {
   const name = formData.get("name") as string;
   const order = parseInt(formData.get("order") as string) || 0;
 
+  const updateData: CategoryUpdate = {
+    name,
+    slug: slugify(name),
+    order,
+  };
+
   const { error } = await supabase
     .from("categories")
-    .update({
-      name,
-      slug: slugify(name),
-      order,
-    })
+    .update(updateData)
     .eq("id", id);
 
   if (error) {
@@ -78,18 +92,20 @@ export async function createPlat(data: {
 }) {
   const supabase = createClient();
 
+  const insertData: PlatInsert = {
+    name: data.name,
+    slug: slugify(data.name),
+    description: data.description,
+    price: data.price,
+    image: data.image,
+    available: data.available,
+    category_id: data.category_id,
+  };
+
   // Create plat
   const { data: plat, error } = await supabase
     .from("plats")
-    .insert({
-      name: data.name,
-      slug: slugify(data.name),
-      description: data.description,
-      price: data.price,
-      image: data.image,
-      available: data.available,
-      category_id: data.category_id,
-    })
+    .insert(insertData)
     .select()
     .single();
 
@@ -126,18 +142,20 @@ export async function updatePlat(
 ) {
   const supabase = createClient();
 
+  const updateData: PlatUpdate = {
+    name: data.name,
+    slug: slugify(data.name),
+    description: data.description,
+    price: data.price,
+    image: data.image,
+    available: data.available,
+    category_id: data.category_id,
+  };
+
   // Update plat
   const { error } = await supabase
     .from("plats")
-    .update({
-      name: data.name,
-      slug: slugify(data.name),
-      description: data.description,
-      price: data.price,
-      image: data.image,
-      available: data.available,
-      category_id: data.category_id,
-    })
+    .update(updateData)
     .eq("id", id);
 
   if (error) {
@@ -199,10 +217,12 @@ export async function createOptionType(formData: FormData) {
 
   const name = formData.get("name") as string;
 
-  const { error } = await supabase.from("option_types").insert({
+  const insertData: OptionTypeInsert = {
     name,
     slug: slugify(name),
-  });
+  };
+
+  const { error } = await supabase.from("option_types").insert(insertData);
 
   if (error) {
     return { error: error.message };
@@ -218,12 +238,14 @@ export async function updateOptionType(id: string, formData: FormData) {
 
   const name = formData.get("name") as string;
 
+  const updateData: OptionTypeUpdate = {
+    name,
+    slug: slugify(name),
+  };
+
   const { error } = await supabase
     .from("option_types")
-    .update({
-      name,
-      slug: slugify(name),
-    })
+    .update(updateData)
     .eq("id", id);
 
   if (error) {
@@ -258,7 +280,13 @@ export async function createOption(data: {
 }) {
   const supabase = createClient();
 
-  const { error } = await supabase.from("options").insert(data);
+  const insertData: OptionInsert = {
+    name: data.name,
+    price_modifier: data.price_modifier,
+    option_type_id: data.option_type_id,
+  };
+
+  const { error } = await supabase.from("options").insert(insertData);
 
   if (error) {
     return { error: error.message };
@@ -279,7 +307,16 @@ export async function updateOption(
 ) {
   const supabase = createClient();
 
-  const { error } = await supabase.from("options").update(data).eq("id", id);
+  const updateData: OptionUpdate = {
+    name: data.name,
+    price_modifier: data.price_modifier,
+    option_type_id: data.option_type_id,
+  };
+
+  const { error } = await supabase
+    .from("options")
+    .update(updateData)
+    .eq("id", id);
 
   if (error) {
     return { error: error.message };
@@ -306,7 +343,7 @@ export async function deleteOption(id: string) {
 
 // ==================== SITE CONFIG ====================
 
-export async function getSiteConfig(key: string) {
+export async function getSiteConfig(key: string): Promise<string | null> {
   const supabase = createClient();
 
   const { data, error } = await supabase
@@ -315,12 +352,11 @@ export async function getSiteConfig(key: string) {
     .eq("key", key)
     .single();
 
-  if (error) {
-    console.error("Error fetching config:", error);
+  if (error || !data) {
     return null;
   }
 
-  return data?.value;
+  return (data as { value: string | null }).value;
 }
 
 export async function updateSiteConfig(key: string, value: string) {
@@ -331,7 +367,7 @@ export async function updateSiteConfig(key: string, value: string) {
       key,
       value,
       updated_at: new Date().toISOString(),
-    },
+    } as any,
     {
       onConflict: "key",
     },
@@ -355,7 +391,6 @@ export async function getAllSiteConfig() {
     .order("key");
 
   if (error) {
-    console.error("Error fetching all config:", error);
     return [];
   }
 
