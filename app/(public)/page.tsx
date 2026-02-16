@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import MenuContainer from '@/components/menu/MenuContainer'
+import { createClient } from "@/lib/supabase/server";
+import MenuContainer from "@/components/menu/MenuContainer";
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -42,8 +42,37 @@ async function getPlats() {
   return data || [];
 }
 
-export default async function HomePage() {
-  const [categories, plats] = await Promise.all([getCategories(), getPlats()]);
+async function getSiteConfig(key: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("site_config")
+    .select("value")
+    .eq("key", key)
+    .single();
 
-  return <MenuContainer categories={categories} plats={plats} />
+  if (error) {
+    // Si la config n'existe pas encore, retourner la valeur par défaut
+    console.log("Config not found:", key);
+    return null;
+  }
+  return data?.value;
+}
+
+export default async function HomePage() {
+  const [categories, plats, showCounterButtonConfig] = await Promise.all([
+    getCategories(),
+    getPlats(),
+    getSiteConfig("show_counter_button"),
+  ]);
+
+  // Par défaut, le bouton est affiché (true)
+  const showCounterButton = showCounterButtonConfig !== "false";
+
+  return (
+    <MenuContainer
+      categories={categories}
+      plats={plats}
+      showCounterButton={showCounterButton}
+    />
+  );
 }

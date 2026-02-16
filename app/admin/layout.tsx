@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   UtensilsCrossed,
@@ -9,34 +9,36 @@ import {
   Settings,
   LogOut,
   Menu,
-  X
-} from 'lucide-react'
-import { useState } from 'react'
-import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
+  X,
+  Sliders,
+} from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/plats', label: 'Plats', icon: UtensilsCrossed },
-  { href: '/admin/categories', label: 'Catégories', icon: FolderOpen },
-  { href: '/admin/options', label: 'Options', icon: Settings },
-]
+  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/plats", label: "Plats", icon: UtensilsCrossed },
+  { href: "/admin/categories", label: "Catégories", icon: FolderOpen },
+  { href: "/admin/options", label: "Options", icon: Settings },
+  { href: "/admin/settings", label: "Paramètres", icon: Sliders },
+];
 
 export default function AdminLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const pathname = usePathname()
-  const router = useRouter()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const pathname = usePathname();
+  const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push('/admin/login')
-  }
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/admin/login");
+  };
 
   return (
     <div className="flex min-h-screen bg-beige-light">
@@ -51,14 +53,17 @@ export default function AdminLayout({
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-64 transform bg-bordeaux transition-transform duration-300 lg:static lg:translate-x-0',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          "fixed inset-y-0 left-0 z-50 w-64 transform bg-bordeaux transition-transform duration-300 lg:static lg:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-16 items-center justify-between border-b border-white/10 px-4">
-            <Link href="/admin/dashboard" className="font-playfair text-xl font-bold text-beige-light">
+            <Link
+              href="/admin/dashboard"
+              className="font-playfair text-xl font-bold text-beige-light"
+            >
               Intemporel
             </Link>
             <button
@@ -72,22 +77,23 @@ export default function AdminLayout({
           {/* Navigation */}
           <nav className="flex-1 space-y-1 p-4">
             {navItems.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
+              const isActive =
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2 font-montserrat text-sm transition-colors',
+                    "flex items-center gap-3 rounded-lg px-3 py-2 font-montserrat text-sm transition-colors",
                     isActive
-                      ? 'bg-white/20 text-beige-light'
-                      : 'text-beige-light/70 hover:bg-white/10 hover:text-beige-light'
+                      ? "bg-white/20 text-beige-light"
+                      : "text-beige-light/70 hover:bg-white/10 hover:text-beige-light",
                   )}
                 >
                   <item.icon className="h-5 w-5" />
                   {item.label}
                 </Link>
-              )
+              );
             })}
           </nav>
 
@@ -123,5 +129,5 @@ export default function AdminLayout({
         <main className="flex-1 p-4 lg:p-6">{children}</main>
       </div>
     </div>
-  )
+  );
 }

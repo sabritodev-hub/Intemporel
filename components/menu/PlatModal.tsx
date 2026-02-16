@@ -1,75 +1,83 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X } from 'lucide-react'
-import { useState, useMemo } from 'react'
-import { formatPrice, getImageUrl } from '@/lib/utils'
-import { Plat, Category, Option, OptionType } from '@/types/database.types'
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
+import { useState, useMemo } from "react";
+import { formatPrice, getImageUrl } from "@/lib/utils";
+import { Plat, Category, Option, OptionType } from "@/types/database.types";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface PlatWithOptions extends Plat {
-  categories: Category
+  categories: Category;
   plat_options: {
     options: Option & {
-      option_types: OptionType
-    }
-  }[]
+      option_types: OptionType;
+    };
+  }[];
 }
 
 interface PlatModalProps {
-  plat: PlatWithOptions | null
-  onClose: () => void
+  plat: PlatWithOptions | null;
+  onClose: () => void;
+  showCounterButton?: boolean;
 }
 
-export default function PlatModal({ plat, onClose }: PlatModalProps) {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+export default function PlatModal({
+  plat,
+  onClose,
+  showCounterButton = true,
+}: PlatModalProps) {
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   // Group options by type
   const optionsByType = useMemo(() => {
-    if (!plat?.plat_options) return {}
+    if (!plat?.plat_options) return {};
 
-    const grouped: Record<string, { type: OptionType; options: (Option & { option_types: OptionType })[] }> = {}
+    const grouped: Record<
+      string,
+      { type: OptionType; options: (Option & { option_types: OptionType })[] }
+    > = {};
 
     plat.plat_options.forEach(({ options }) => {
-      const typeId = options.option_types.id
+      const typeId = options.option_types.id;
       if (!grouped[typeId]) {
         grouped[typeId] = {
           type: options.option_types,
           options: [],
-        }
+        };
       }
-      grouped[typeId].options.push(options)
-    })
+      grouped[typeId].options.push(options);
+    });
 
-    return grouped
-  }, [plat])
+    return grouped;
+  }, [plat]);
 
   // Calculate total price
   const totalPrice = useMemo(() => {
-    if (!plat) return 0
+    if (!plat) return 0;
 
-    let total = plat.price
+    let total = plat.price;
 
     plat.plat_options?.forEach(({ options }) => {
       if (selectedOptions.includes(options.id) && options.price_modifier) {
-        total += options.price_modifier
+        total += options.price_modifier;
       }
-    })
+    });
 
-    return total
-  }, [plat, selectedOptions])
+    return total;
+  }, [plat, selectedOptions]);
 
   const toggleOption = (optionId: string) => {
     setSelectedOptions((prev) =>
       prev.includes(optionId)
         ? prev.filter((id) => id !== optionId)
-        : [...prev, optionId]
-    )
-  }
+        : [...prev, optionId],
+    );
+  };
 
-  if (!plat) return null
+  if (!plat) return null;
 
   return (
     <AnimatePresence>
@@ -158,11 +166,12 @@ export default function PlatModal({ plat, onClose }: PlatModalProps) {
                                 {option.name}
                               </span>
                             </div>
-                            {option.price_modifier && option.price_modifier > 0 && (
-                              <span className="font-montserrat text-sm text-bordeaux/70">
-                                +{formatPrice(option.price_modifier)}
-                              </span>
-                            )}
+                            {option.price_modifier &&
+                              option.price_modifier > 0 && (
+                                <span className="font-montserrat text-sm text-bordeaux/70">
+                                  +{formatPrice(option.price_modifier)}
+                                </span>
+                              )}
                           </label>
                         ))}
                       </div>
@@ -181,18 +190,20 @@ export default function PlatModal({ plat, onClose }: PlatModalProps) {
                     {formatPrice(totalPrice)}
                   </p>
                 </div>
-                <Button
-                  size="lg"
-                  disabled={!plat.available}
-                  className="font-montserrat"
-                >
-                  {plat.available ? 'Voir au comptoir' : 'Indisponible'}
-                </Button>
+                {showCounterButton && (
+                  <Button
+                    size="lg"
+                    disabled={!plat.available}
+                    className="font-montserrat"
+                  >
+                    {plat.available ? "Voir au comptoir" : "Indisponible"}
+                  </Button>
+                )}
               </div>
             </div>
           </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }
