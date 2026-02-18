@@ -126,7 +126,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="font-playfair text-3xl text-bordeaux">
-            Intemporel
+            L'Intemporel
           </CardTitle>
           <CardDescription>
             Connectez-vous pour accéder à l'administration

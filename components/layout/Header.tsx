@@ -14,7 +14,7 @@ export default async function Header() {
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
           <span className="font-playfair text-2xl font-bold text-bordeaux">
-            Intemporel
+            L'Intemporel
           </span>
         </Link>
         <nav className="flex items-center space-x-4">

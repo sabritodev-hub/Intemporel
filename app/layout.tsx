@@ -1,17 +1,18 @@
-import type { Metadata } from 'next'
-import '@/styles/globals.css'
-import { Toaster } from '@/components/ui/toaster'
+import type { Metadata } from "next";
+import "@/styles/globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Intemporel - Bar à Desserts',
-  description: 'Découvrez notre carte de desserts artisanaux. Un moment de douceur intemporel.',
-  keywords: ['desserts', 'bar à desserts', 'pâtisserie', 'menu', 'intemporel'],
-}
+  title: "L'Intemporel - Bar à Desserts",
+  description:
+    "Découvrez notre carte de desserts artisanaux. Un moment de douceur intemporel.",
+  keywords: ["desserts", "bar à desserts", "pâtisserie", "menu", "intemporel"],
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="fr">
@@ -20,5 +21,5 @@ export default function RootLayout({
         <Toaster />
       </body>
     </html>
-  )
+  );
 }

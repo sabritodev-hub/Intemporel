@@ -1,12 +1,12 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   theme: {
     container: {
@@ -19,14 +19,14 @@ const config: Config = {
     extend: {
       colors: {
         beige: {
-          light: '#F5F5DC',
-          DEFAULT: '#F5F5DC',
-          darker: '#E8E8CC',
+          light: "#FAF9F6",
+          DEFAULT: "#F8F6F0",
+          darker: "#F0EDE5",
         },
         bordeaux: {
-          light: '#A0223B',
-          DEFAULT: '#800020',
-          dark: '#600018',
+          light: "#A0223B",
+          DEFAULT: "#800020",
+          dark: "#600018",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -63,8 +63,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        playfair: ['Playfair Display', 'serif'],
-        montserrat: ['Montserrat', 'sans-serif'],
+        playfair: ["Playfair Display", "serif"],
+        montserrat: ["Montserrat", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -88,6 +88,6 @@ const config: Config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
 
-export default config
+export default config;
