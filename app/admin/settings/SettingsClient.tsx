@@ -1,56 +1,65 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Save, Settings, Eye, Store } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { useToast } from '@/components/ui/use-toast'
-import { updateSiteConfig } from '@/app/actions'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Save, Settings, Eye, Store } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useToast } from "@/components/ui/use-toast";
+import { updateSiteConfig } from "@/app/actions";
 
 interface SettingsClientProps {
-  initialConfig: Record<string, string>
+  initialConfig: Record<string, string>;
 }
 
 export default function SettingsClient({ initialConfig }: SettingsClientProps) {
-  const router = useRouter()
-  const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [config, setConfig] = useState({
-    show_counter_button: initialConfig.show_counter_button === 'true',
-    site_name: initialConfig.site_name || 'Intemporel',
-    site_description: initialConfig.site_description || 'Bar à Desserts',
-  })
+    show_counter_button: initialConfig.show_counter_button === "true",
+    site_name: initialConfig.site_name || "L'Intemporel",
+    site_description: initialConfig.site_description || "Bar à Desserts",
+  });
 
   const handleSave = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       // Sauvegarder chaque config
-      await updateSiteConfig('show_counter_button', config.show_counter_button.toString())
-      await updateSiteConfig('site_name', config.site_name)
-      await updateSiteConfig('site_description', config.site_description)
+      await updateSiteConfig(
+        "show_counter_button",
+        config.show_counter_button.toString(),
+      );
+      await updateSiteConfig("site_name", config.site_name);
+      await updateSiteConfig("site_description", config.site_description);
 
       toast({
-        title: 'Succès',
-        description: 'Paramètres enregistrés avec succès',
-      })
+        title: "Succès",
+        description: "Paramètres enregistrés avec succès",
+      });
 
-      router.refresh()
+      router.refresh();
     } catch (error) {
       toast({
-        title: 'Erreur',
-        description: 'Une erreur est survenue',
-        variant: 'destructive',
-      })
+        title: "Erreur",
+        description: "Une erreur est survenue",
+        variant: "destructive",
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -65,7 +74,7 @@ export default function SettingsClient({ initialConfig }: SettingsClientProps) {
         </div>
         <Button onClick={handleSave} disabled={isLoading}>
           <Save className="mr-2 h-4 w-4" />
-          {isLoading ? 'Enregistrement...' : 'Enregistrer'}
+          {isLoading ? "Enregistrement..." : "Enregistrer"}
         </Button>
       </div>
 
@@ -87,8 +96,10 @@ export default function SettingsClient({ initialConfig }: SettingsClientProps) {
               <Input
                 id="site_name"
                 value={config.site_name}
-                onChange={(e) => setConfig({ ...config, site_name: e.target.value })}
-                placeholder="Ex: Intemporel"
+                onChange={(e) =>
+                  setConfig({ ...config, site_name: e.target.value })
+                }
+                placeholder="Ex: L'Intemporel"
               />
             </div>
             <div className="space-y-2">
@@ -96,7 +107,9 @@ export default function SettingsClient({ initialConfig }: SettingsClientProps) {
               <Input
                 id="site_description"
                 value={config.site_description}
-                onChange={(e) => setConfig({ ...config, site_description: e.target.value })}
+                onChange={(e) =>
+                  setConfig({ ...config, site_description: e.target.value })
+                }
                 placeholder="Ex: Bar à Desserts"
               />
             </div>
@@ -117,17 +130,23 @@ export default function SettingsClient({ initialConfig }: SettingsClientProps) {
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between rounded-lg border border-bordeaux/20 p-4">
               <div className="space-y-1">
-                <Label htmlFor="show_counter_button" className="text-base font-medium">
+                <Label
+                  htmlFor="show_counter_button"
+                  className="text-base font-medium"
+                >
                   Bouton "Voir au comptoir"
                 </Label>
                 <p className="text-sm text-bordeaux/60">
-                  Affiche un bouton d'action sur les fiches produits pour inciter les clients à passer commande
+                  Affiche un bouton d'action sur les fiches produits pour
+                  inciter les clients à passer commande
                 </p>
               </div>
               <Switch
                 id="show_counter_button"
                 checked={config.show_counter_button}
-                onCheckedChange={(checked) => setConfig({ ...config, show_counter_button: checked })}
+                onCheckedChange={(checked) =>
+                  setConfig({ ...config, show_counter_button: checked })
+                }
               />
             </div>
 
@@ -139,7 +158,9 @@ export default function SettingsClient({ initialConfig }: SettingsClientProps) {
                 {config.show_counter_button ? (
                   <Button size="sm">Voir au comptoir</Button>
                 ) : (
-                  <span className="text-sm text-bordeaux/50 italic">Bouton masqué</span>
+                  <span className="text-sm text-bordeaux/50 italic">
+                    Bouton masqué
+                  </span>
                 )}
               </div>
             </div>
@@ -157,11 +178,12 @@ export default function SettingsClient({ initialConfig }: SettingsClientProps) {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-bordeaux/70">
-            Les modifications seront appliquées immédiatement sur le site public après l'enregistrement.
-            Le bouton "Voir au comptoir" permet d'encourager vos clients à passer leur commande au comptoir.
+            Les modifications seront appliquées immédiatement sur le site public
+            après l'enregistrement. Le bouton "Voir au comptoir" permet
+            d'encourager vos clients à passer leur commande au comptoir.
           </p>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

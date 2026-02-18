@@ -1,13 +1,13 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { cn } from '@/lib/utils'
-import { Category } from '@/types/database.types'
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Category } from "@/types/database.types";
 
 interface CategoryFilterProps {
-  categories: Category[]
-  selectedCategory: string | null
-  onSelectCategory: (slug: string | null) => void
+  categories: Category[];
+  selectedCategory: string | null;
+  onSelectCategory: (slug: string | null) => void;
 }
 
 export default function CategoryFilter({
@@ -16,14 +16,15 @@ export default function CategoryFilter({
   onSelectCategory,
 }: CategoryFilterProps) {
   return (
-    <div className="flex flex-wrap justify-center gap-2 py-6">
+    <div className="flex flex-wrap justify-center gap-3 py-6">
       <button
         onClick={() => onSelectCategory(null)}
         className={cn(
-          'rounded-full px-6 py-2 font-montserrat text-sm font-medium transition-all duration-300',
+          "rounded-full px-6 py-2 font-montserrat font-medium transition-all duration-300",
+          "text-[1.5rem]",
           selectedCategory === null
-            ? 'bg-bordeaux text-beige-light shadow-lg'
-            : 'bg-beige-darker text-bordeaux hover:bg-bordeaux/10'
+            ? "bg-bordeaux text-beige-light shadow-lg"
+            : "bg-beige-darker text-bordeaux hover:bg-bordeaux/10",
         )}
       >
         Tous
@@ -33,15 +34,16 @@ export default function CategoryFilter({
           key={category.id}
           onClick={() => onSelectCategory(category.slug)}
           className={cn(
-            'rounded-full px-6 py-2 font-montserrat text-sm font-medium transition-all duration-300',
+            "rounded-full px-6 py-2 font-montserrat font-medium transition-all duration-300",
+            "text-[1.5rem]",
             selectedCategory === category.slug
-              ? 'bg-bordeaux text-beige-light shadow-lg'
-              : 'bg-beige-darker text-bordeaux hover:bg-bordeaux/10'
+              ? "bg-bordeaux text-beige-light shadow-lg"
+              : "bg-beige-darker text-bordeaux hover:bg-bordeaux/10",
           )}
         >
           {category.name}
         </button>
       ))}
     </div>
-  )
+  );
 }

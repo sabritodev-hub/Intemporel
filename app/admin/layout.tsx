@@ -65,7 +65,7 @@ export default function AdminLayout({
               href="/admin/dashboard"
               className="font-playfair text-xl font-bold text-beige-light"
             >
-              Intemporel
+              L'Intemporel
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}

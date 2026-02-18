@@ -4,16 +4,16 @@ export default function Footer() {
       <div className="container">
         <div className="flex flex-col items-center justify-center space-y-4">
           <p className="font-playfair text-xl font-semibold text-bordeaux">
-            Intemporel
+            L'Intemporel
           </p>
           <p className="text-center text-sm text-bordeaux/70">
             Un moment de douceur hors du temps
           </p>
           <p className="text-xs text-bordeaux/50">
-            © {new Date().getFullYear()} Intemporel. Tous droits réservés.
+            © {new Date().getFullYear()} L'Intemporel. Tous droits réservés.
           </p>
         </div>
       </div>
     </footer>
-  )
+  );
 }
