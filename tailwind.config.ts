@@ -19,9 +19,9 @@ const config: Config = {
     extend: {
       colors: {
         beige: {
-          light: "#FAF9F6",
-          DEFAULT: "#F8F6F0",
-          darker: "#F0EDE5",
+          light: "#F5F5DC",
+          DEFAULT: "#F5F5DC",
+          darker: "#E8E8CC",
         },
         bordeaux: {
           light: "#A0223B",
