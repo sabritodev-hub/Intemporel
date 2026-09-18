@@ -1,13 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useState, useMemo } from "react";
-import { formatPrice, getImageUrl } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import { Plat, Category, Option, OptionType } from "@/types/database.types";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import BandeauPlat from "./BandeauPlat";
 
 interface PlatWithOptions extends Plat {
   categories: Category;
@@ -105,24 +105,8 @@ export default function PlatModal({
           </button>
 
           <div className="max-h-[90vh] overflow-y-auto">
-            {/* Image */}
-            <div className="relative aspect-video">
-              <Image
-                src={getImageUrl(plat.image)}
-                alt={plat.name}
-                fill
-                className="object-cover"
-                priority
-                unoptimized
-              />
-              {!plat.available && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                  <span className="rounded-full bg-bordeaux px-6 py-3 font-montserrat text-lg font-semibold text-white">
-                    Indisponible
-                  </span>
-                </div>
-              )}
-            </div>
+            {/* Bandeau */}
+            <BandeauPlat image={plat.image} nom={plat.name} available={plat.available} priority />
 
             {/* Content */}
             <div className="p-6">

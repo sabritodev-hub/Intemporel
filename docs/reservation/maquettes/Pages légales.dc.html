@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#F5F5DC; font-family:"Montserrat",sans-serif; color:#800020; }
+  a { color:#800020; text-decoration:underline; text-underline-offset:2px; }
+  a:hover { color:#A0223B; }
+  * { box-sizing:border-box; }
+</style>
+</helmet>
+
+<div style="min-height:100vh; background:#F5F5DC; position:relative;">
+
+  <header style="position:sticky; top:0; z-index:20; background:#800020; color:#F5F5DC;">
+    <div style="max-width:1180px; margin:0 auto; padding:0 clamp(14px,4vw,24px); height:60px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <a href="#" style="font-family:'Playfair Display',serif; font-size:clamp(17px,4.6vw,20px); font-weight:700; color:#F5F5DC; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;">L'Intemporel</a>
+      <nav style="display:flex; align-items:center; gap:clamp(10px,3vw,22px); font-size:13px; min-width:0;">
+        <a href="#" style="color:rgba(245,245,220,.85); text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" style-hover="color:#F5F5DC;">La carte</a>
+        <a href="#" style="background:#F5F5DC; color:#800020; border-radius:8px; padding:10px 14px; font-weight:600; text-decoration:none; white-space:nowrap; min-height:44px; display:flex; align-items:center; flex:none;" style-hover="background:#ffffff;">Réserver</a>
+      </nav>
+    </div>
+  </header>
+
+  <div style="background:#E8E8CC; border-bottom:1px solid rgba(128,0,32,.12);">
+    <div style="max-width:1180px; margin:0 auto; padding:12px clamp(14px,4vw,24px); display:flex; gap:8px; overflow-x:auto; scrollbar-width:none;">
+      <sc-for list="{{ onglets }}" as="o" hint-placeholder-count="4">
+        <button onClick="{{ o.choisir }}" style="border:1px solid {{ o.bordure }}; background:{{ o.fond }}; color:{{ o.encre }}; border-radius:999px; padding:9px 16px; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:44px; white-space:nowrap; flex:none;" style-hover="border-color:#800020;">{{ o.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <sc-if value="{{ estDoc }}" hint-placeholder-val="{{ true }}">
+    <main style="max-width:860px; margin:0 auto; padding:clamp(28px,7vw,60px) clamp(14px,4vw,24px) clamp(56px,10vw,96px);">
+      <div style="font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:#A0223B;">{{ doc.kicker }}</div>
+      <h1 style="font-family:'Playfair Display',serif; font-size:clamp(32px,7.5vw,48px); line-height:1.06; margin:14px 0 0; font-weight:600;">{{ doc.titre }}</h1>
+      <p style="margin:16px 0 0; font-size:15px; line-height:1.7; color:#7d4152; text-wrap:pretty;">{{ doc.chapeau }}</p>
+      <div style="margin-top:14px; font-size:12px; color:#7d4152;">Dernière mise à jour : {{ doc.maj }}</div>
+
+      <div style="margin-top:clamp(28px,6vw,44px); display:flex; flex-direction:column; gap:clamp(22px,4vw,34px);">
+        <sc-for list="{{ doc.sections }}" as="s" hint-placeholder-count="6">
+          <section style="display:flex; flex-direction:column; gap:12px;">
+            <h2 style="font-family:'Playfair Display',serif; font-size:clamp(20px,4.5vw,25px); line-height:1.25; margin:0; font-weight:600; display:flex; gap:12px; align-items:baseline;">
+              <span style="font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; color:#A0223B; flex:none;">{{ s.num }}</span>{{ s.titre }}
+            </h2>
+            <sc-for list="{{ s.paras }}" as="p" hint-placeholder-count="2">
+              <p style="margin:0; font-size:14px; line-height:1.75; color:#6b2135; text-wrap:pretty;">{{ p.t }}</p>
+            </sc-for>
+            <sc-if value="{{ s.aListe }}" hint-placeholder-val="{{ false }}">
+              <ul style="margin:2px 0 0; padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+                <sc-for list="{{ s.liste }}" as="l" hint-placeholder-count="3">
+                  <li style="font-size:14px; line-height:1.7; color:#6b2135;">{{ l.t }}</li>
+                </sc-for>
+              </ul>
+            </sc-if>
+            <sc-if value="{{ s.aTable }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:4px; background:#ffffff; border:1px solid #e2dcc0; border-radius:12px; overflow:hidden;">
+                <sc-for list="{{ s.table }}" as="r" hint-placeholder-count="3">
+                  <div style="display:flex; flex-wrap:wrap; gap:4px 16px; padding:13px 15px; border-bottom:1px solid #f0ead4;">
+                    <div style="flex:1 1 180px; font-size:13px; font-weight:600;">{{ r.k }}</div>
+                    <div style="flex:2 1 260px; font-size:13px; line-height:1.6; color:#7d4152;">{{ r.v }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ s.encart }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:4px; background:#E8E8CC; border-radius:12px; padding:15px 16px; font-size:13px; line-height:1.7; color:#6b2135;">{{ s.encart }}</div>
+            </sc-if>
+          </section>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:clamp(34px,7vw,52px); background:#ffffff; border:1px solid #e2dcc0; border-radius:14px; padding:clamp(18px,4vw,24px); display:flex; flex-wrap:wrap; gap:18px; align-items:center; justify-content:space-between;">
+        <div style="max-width:460px;">
+          <div style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600;">Une question sur vos données ?</div>
+          <p style="margin:7px 0 0; font-size:13px; line-height:1.65; color:#7d4152;">Écrivez-nous ou appelez le restaurant : nous répondons sous 30 jours maximum, comme le prévoit le RGPD.</p>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:9px; flex:1 1 260px;">
+          <a href="mailto:contact@lintemporel.fr" style="flex:1 1 130px; background:#800020; color:#F5F5DC; border-radius:10px; padding:14px 16px; font-size:13.5px; font-weight:600; text-decoration:none; text-align:center; min-height:48px; display:flex; align-items:center; justify-content:center;" style-hover="background:#600018;">Nous écrire</a>
+          <a href="tel:+33123456789" style="flex:1 1 130px; border:1px solid #800020; color:#800020; border-radius:10px; padding:14px 16px; font-size:13.5px; font-weight:600; text-decoration:none; text-align:center; min-height:48px; display:flex; align-items:center; justify-content:center;" style-hover="background:#800020; color:#F5F5DC;">01 23 45 67 89</a>
+        </div>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ est404 }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:720px; margin:0 auto; padding:clamp(40px,10vw,92px) clamp(14px,4vw,24px) clamp(56px,10vw,96px); text-align:center;">
+      <div style="font-family:'Playfair Display',serif; font-size:clamp(76px,22vw,150px); line-height:.9; font-weight:600; color:#800020; letter-spacing:-.02em;">404</div>
+      <div style="width:46px; height:1px; background:rgba(128,0,32,.35); margin:clamp(18px,4vw,26px) auto;"></div>
+      <h1 style="font-family:'Playfair Display',serif; font-size:clamp(26px,6vw,38px); line-height:1.15; margin:0; font-weight:600;">Cette page a quitté la carte</h1>
+      <p style="margin:16px auto 0; max-width:440px; font-size:14.5px; line-height:1.7; color:#7d4152; text-wrap:pretty;">La page que vous cherchez n'existe plus, ou l'adresse comporte une erreur. Nos créations, elles, sont toujours là.</p>
+      <div style="margin-top:clamp(26px,6vw,36px); display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+        <a href="#" style="background:#800020; color:#F5F5DC; border-radius:10px; padding:15px 22px; font-size:14px; font-weight:600; text-decoration:none; min-height:48px; display:flex; align-items:center; flex:1 1 200px; justify-content:center;" style-hover="background:#600018;">Voir la carte</a>
+        <a href="#" style="border:1px solid #800020; color:#800020; border-radius:10px; padding:15px 22px; font-size:14px; font-weight:600; text-decoration:none; min-height:48px; display:flex; align-items:center; flex:1 1 200px; justify-content:center;" style-hover="background:#800020; color:#F5F5DC;">Réserver le brunch</a>
+      </div>
+      <div style="margin-top:clamp(30px,7vw,46px); border-top:1px solid rgba(128,0,32,.14); padding-top:22px; font-size:13px; line-height:1.7; color:#7d4152;">
+        Vous cherchiez à annuler une réservation ? Le lien d'annulation se trouve uniquement dans votre email de confirmation. Sinon, appelez-nous au <a href="tel:+33123456789">01 23 45 67 89</a>.
+      </div>
+    </main>
+  </sc-if>
+
+  <footer style="border-top:1px solid rgba(128,0,32,.1); background:#E8E8CC;">
+    <div style="max-width:1180px; margin:0 auto; padding:32px clamp(14px,4vw,24px); display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center;">
+      <p style="margin:0; font-family:'Playfair Display',serif; font-size:20px; font-weight:600; color:#800020;">L'Intemporel</p>
+      <p style="margin:0; font-size:14px; color:#7d4152;">Un moment de douceur hors du temps</p>
+      <div style="display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:center; font-size:12.5px;">
+        <a href="#" style="color:#7d4152;">Mentions légales</a>
+        <a href="#" style="color:#7d4152;">Confidentialité</a>
+        <a href="#" style="color:#7d4152;">CGU</a>
+        <button onClick="{{ rouvrirCookies }}" style="background:none; border:none; padding:0; font-family:'Montserrat',sans-serif; font-size:12.5px; color:#7d4152; text-decoration:underline; text-underline-offset:2px; cursor:pointer;">Gérer les cookies</button>
+      </div>
+      <p style="margin:0; font-size:12px; color:#7d4152;">© 2026 L'Intemporel. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <sc-if value="{{ bandeauVisible }}" hint-placeholder-val="{{ true }}">
+    <div style="position:fixed; left:0; right:0; bottom:0; z-index:60; padding:clamp(10px,3vw,18px); display:flex; justify-content:center; pointer-events:none;">
+      <div style="pointer-events:auto; width:100%; max-width:760px; background:#ffffff; border:1px solid #cfc9a8; border-radius:14px; box-shadow:0 18px 44px rgba(60,20,30,.24); overflow:hidden;">
+
+        <sc-if value="{{ vueBandeau }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:clamp(16px,4vw,20px); display:flex; flex-direction:column; gap:14px;">
+            <div>
+              <div style="font-family:'Playfair Display',serif; font-size:18px; font-weight:600;">{{ bandeau.titre }}</div>
+              <p style="margin:8px 0 0; font-size:13px; line-height:1.65; color:#6b2135; text-wrap:pretty;">{{ bandeau.texte }}</p>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:9px;">
+              <sc-if value="{{ bandeau.consentement }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ toutAccepter }}" style="flex:1 1 150px; border:none; border-radius:10px; background:#800020; color:#F5F5DC; padding:14px 16px; font-size:13.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="background:#600018;">Tout accepter</button>
+                <button onClick="{{ toutRefuser }}" style="flex:1 1 150px; border:1px solid #800020; border-radius:10px; background:transparent; color:#800020; padding:14px 16px; font-size:13.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="background:#800020; color:#F5F5DC;">Tout refuser</button>
+                <button onClick="{{ personnaliser }}" style="flex:1 1 150px; border:1px solid #d9d4b4; border-radius:10px; background:transparent; color:#7d4152; padding:14px 16px; font-size:13.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="border-color:#800020; color:#800020;">Personnaliser</button>
+              </sc-if>
+              <sc-if value="{{ bandeau.information }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ fermer }}" style="flex:1 1 150px; border:none; border-radius:10px; background:#800020; color:#F5F5DC; padding:14px 16px; font-size:13.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="background:#600018;">J'ai compris</button>
+                <button onClick="{{ personnaliser }}" style="flex:1 1 150px; border:1px solid #d9d4b4; border-radius:10px; background:transparent; color:#7d4152; padding:14px 16px; font-size:13.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="border-color:#800020; color:#800020;">Voir le détail</button>
+              </sc-if>
+            </div>
+            <div style="font-size:12px; line-height:1.6; color:#7d4152;">{{ bandeau.pied }}</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ vuePanneau }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; flex-direction:column; max-height:min(78vh,560px);">
+            <div style="padding:clamp(16px,4vw,20px); border-bottom:1px solid #f0ead4;">
+              <div style="font-family:'Playfair Display',serif; font-size:18px; font-weight:600;">Vos préférences de cookies</div>
+              <p style="margin:7px 0 0; font-size:12.5px; line-height:1.6; color:#7d4152;">Vous pouvez changer d'avis à tout moment depuis « Gérer les cookies » en bas de page.</p>
+            </div>
+            <div style="padding:clamp(14px,3vw,18px) clamp(16px,4vw,20px); display:flex; flex-direction:column; gap:12px; overflow-y:auto;">
+              <sc-for list="{{ categories }}" as="c" hint-placeholder-count="3">
+                <div style="background:#FBFAF0; border:1px solid #e2dcc0; border-radius:12px; padding:14px 15px; display:flex; flex-wrap:wrap; gap:12px; align-items:flex-start; justify-content:space-between;">
+                  <div style="flex:1 1 220px; min-width:0;">
+                    <div style="font-size:13.5px; font-weight:600;">{{ c.nom }}</div>
+                    <p style="margin:6px 0 0; font-size:12.5px; line-height:1.6; color:#7d4152; text-wrap:pretty;">{{ c.desc }}</p>
+                    <div style="margin-top:7px; font-size:12px; color:#7d4152;">{{ c.detail }}</div>
+                  </div>
+                  <button onClick="{{ c.basculer }}" style="flex:none; display:flex; align-items:center; gap:9px; background:none; border:none; padding:6px 0; font-family:'Montserrat',sans-serif; cursor:{{ c.curseur }};">
+                    <span style="width:42px; height:24px; border-radius:999px; background:{{ c.switchFond }}; position:relative; display:inline-block; flex:none;"><span style="position:absolute; top:3px; left:{{ c.switchX }}; width:18px; height:18px; border-radius:999px; background:#ffffff;"></span></span>
+                    <span style="font-size:12px; font-weight:600; color:{{ c.etatEncre }};">{{ c.etat }}</span>
+                  </button>
+                </div>
+              </sc-for>
+            </div>
+            <div style="padding:clamp(14px,3vw,18px) clamp(16px,4vw,20px); border-top:1px solid #f0ead4; display:flex; flex-wrap:wrap; gap:9px; justify-content:flex-end;">
+              <button onClick="{{ toutRefuser }}" style="flex:1 1 150px; border:1px solid #d9d4b4; border-radius:10px; background:transparent; color:#7d4152; padding:14px 16px; font-size:13.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="border-color:#800020; color:#800020;">Tout refuser</button>
+              <button onClick="{{ enregistrer }}" style="flex:1 1 180px; border:none; border-radius:10px; background:#800020; color:#F5F5DC; padding:14px 16px; font-size:13.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="background:#600018;">Enregistrer mes choix</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;modeBandeau&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;options&quot;: [&quot;consentement&quot;, &quot;information&quot;],
+    &quot;default&quot;: &quot;consentement&quot;,
+    &quot;tsType&quot;: &quot;\&quot;consentement\&quot; | \&quot;information\&quot;&quot;,
+    &quot;section&quot;: &quot;Bandeau cookies&quot;
+  }
+}">
+const MAJ = "16 septembre 2026";
+
+const CONFIDENTIALITE = {
+  kicker: "Données personnelles",
+  titre: "Politique de confidentialité",
+  chapeau: "L'Intemporel collecte le minimum d'informations nécessaires pour tenir votre table et vous prévenir en cas d'imprévu. Rien n'est vendu, rien n'est utilisé à des fins publicitaires.",
+  maj: MAJ,
+  sections: [
+    { num: "01", titre: "Qui est responsable de vos données", paras: [
+        { t: "L'Intemporel, restaurant et pâtisserie, 12 rue des Arts, 75000 Paris. Contact : contact@lintemporel.fr ou 01 23 45 67 89." },
+        { t: "Le restaurant est seul responsable du traitement. Aucune donnée n'est transmise à un tiers à des fins commerciales." }
+      ] },
+    { num: "02", titre: "Ce que nous collectons, et pourquoi", paras: [
+        { t: "Lors d'une réservation de brunch, trois informations seulement sont demandées." }
+      ], aTable: true, table: [
+        { k: "Nom", v: "Retrouver votre table à l'arrivée et vous accueillir par votre nom." },
+        { k: "Adresse email", v: "Envoyer la confirmation, le lien d'annulation, et vous prévenir si nous devons annuler le service." },
+        { k: "Téléphone", v: "Vous joindre en cas d'imprévu le jour même. Jamais utilisé pour de la prospection." },
+        { k: "Nombre de personnes, date et créneau", v: "Organiser la salle et respecter la capacité de chaque service." }
+      ], encart: "Base légale : l'exécution de votre demande de réservation (article 6.1.b du RGPD). Sans ces informations, nous ne pouvons pas tenir la table." },
+    { num: "03", titre: "Combien de temps nous les gardons", paras: [
+        { t: "Vos coordonnées sont automatiquement effacées 30 jours après la date de votre venue, ou 30 jours après l'annulation. Cette suppression est automatique : vous n'avez aucune démarche à faire." },
+        { t: "Au-delà, nous ne conservons qu'un décompte anonyme de couverts par service, utile pour préparer la production. Ce décompte ne permet pas de vous identifier." }
+      ] },
+    { num: "04", titre: "Qui y a accès", paras: [
+        { t: "Seuls le responsable du restaurant et l'équipe de salle en service consultent les réservations du jour, depuis un espace protégé par mot de passe." }
+      ], aListe: true, liste: [
+        { t: "Hébergement et base de données : Supabase, données stockées dans l'Union européenne." },
+        { t: "Envoi des emails de réservation : notre prestataire d'emailing, qui traite uniquement votre adresse et le contenu du message." },
+        { t: "Protection du formulaire contre les robots : Cloudflare Turnstile, qui analyse le comportement du navigateur sans vous profiler ni suivre votre navigation." }
+      ] },
+    { num: "05", titre: "Vos droits", paras: [
+        { t: "Vous pouvez à tout moment demander l'accès à vos données, leur correction, leur suppression, ou vous opposer à leur traitement. Un simple email ou un appel suffit : nous répondons sous 30 jours." },
+        { t: "Le lien d'annulation reçu par email vous permet aussi de supprimer vous-même votre réservation, jusqu'à 24 h avant le service." }
+      ], encart: "Si notre réponse ne vous satisfait pas, vous pouvez saisir la CNIL — 3 place de Fontenoy, 75007 Paris, ou cnil.fr." },
+    { num: "06", titre: "Cookies", paras: [
+        { t: "Le site fonctionne sans cookie publicitaire et sans mesure d'audience nominative. Le détail des cookies utilisés, et le réglage de vos préférences, se trouvent dans le bandeau « Gérer les cookies » en bas de page." }
+      ] }
+  ]
+};
+
+const CGU = {
+  kicker: "Conditions d'utilisation",
+  titre: "Conditions générales d'utilisation",
+  chapeau: "Ces conditions encadrent l'usage du site lintemporel.fr et du service de réservation de brunch. Réserver vaut acceptation de ces règles.",
+  maj: MAJ,
+  sections: [
+    { num: "01", titre: "Objet du site", paras: [
+        { t: "Le site présente la carte du restaurant et permet de réserver une table pour le brunch du weekend. Il ne permet ni la commande à distance, ni le paiement en ligne, ni la livraison." },
+        { t: "Les prix et la composition de la carte sont donnés à titre indicatif et peuvent évoluer selon les saisons et les approvisionnements. Seule la carte remise en salle fait foi." }
+      ] },
+    { num: "02", titre: "Réserver une table", paras: [
+        { t: "La réservation est gratuite, sans acompte et sans empreinte bancaire." }
+      ], aListe: true, liste: [
+        { t: "Le brunch est servi le samedi et le dimanche, sur les créneaux affichés." },
+        { t: "La réservation en ligne va de 1 à 12 personnes. Au-delà, contactez le restaurant par téléphone : nous organisons l'accueil des groupes au cas par cas." },
+        { t: "Les réservations d'une journée ferment à l'heure du premier service de cette journée." },
+        { t: "Une réservation est confirmée uniquement après réception de l'email de confirmation. Sans cet email, vérifiez vos indésirables puis appelez-nous." }
+      ] },
+    { num: "03", titre: "Retard et table non occupée", paras: [
+        { t: "Votre table est gardée 15 minutes après l'heure de début du créneau. Passé ce délai, nous pouvons l'attribuer à d'autres clients, mais nous faisons toujours notre possible pour vous installer si vous nous prévenez par téléphone." }
+      ] },
+    { num: "04", titre: "Annuler", paras: [
+        { t: "L'annulation en ligne se fait uniquement depuis le lien présent dans votre email de confirmation, jusqu'à 24 h avant le début du service. Il n'existe pas de compte client : ce lien est le seul accès à votre réservation." },
+        { t: "Moins de 24 h avant, appelez le restaurant au 01 23 45 67 89. Prévenir, même au dernier moment, libère la table pour d'autres clients." }
+      ], encart: "Le restaurant peut exceptionnellement annuler un service (fermeture imprévue, incident en cuisine). Vous êtes alors prévenu par email, avec le motif, et nous vous aidons à trouver un autre créneau." },
+    { num: "05", titre: "Usage loyal du service", paras: [
+        { t: "Les réservations multiples ou fictives, l'usage de fausses coordonnées et toute tentative de saturation des créneaux nous privent de couverts réels. Nous nous réservons le droit d'annuler de telles réservations." },
+        { t: "Le formulaire est protégé contre les envois automatisés. Cette vérification peut occasionnellement demander une confirmation supplémentaire." }
+      ] },
+    { num: "06", titre: "Disponibilité et responsabilité", paras: [
+        { t: "Le site peut être momentanément indisponible pour maintenance. En cas d'impossibilité de réserver en ligne, le téléphone reste ouvert aux heures de service." },
+        { t: "Les textes, photographies et éléments graphiques du site appartiennent à L'Intemporel et ne peuvent pas être réutilisés sans autorisation écrite." }
+      ] },
+    { num: "07", titre: "Droit applicable", paras: [
+        { t: "Ces conditions sont soumises au droit français. En cas de litige, une solution amiable sera recherchée avant toute action judiciaire." }
+      ] }
+  ]
+};
+
+const CATEGORIES = [
+  { cle: "essentiels", nom: "Strictement nécessaires", desc: "Mémorisent votre réservation en cours et protègent le formulaire contre les robots. Sans eux, la réservation ne peut pas aboutir.", detail: "Session de réservation · Cloudflare Turnstile · durée : la visite", verrou: true },
+  { cle: "preferences", nom: "Préférences d'affichage", desc: "Retiennent vos choix de confort, comme la catégorie de la carte consultée en dernier.", detail: "Stockage local · durée : 6 mois", verrou: false },
+  { cle: "mesure", nom: "Mesure d'audience", desc: "Comptent les visites de façon anonyme pour savoir quelles pages sont utiles. Aucun profil publicitaire, aucun partage avec des tiers.", detail: "Statistiques agrégées · durée : 13 mois", verrou: false }
+];
+
+class Component extends DCLogic {
+  state = {
+    page: "confidentialite",
+    cookies: "bandeau",
+    choix: { essentiels: true, preferences: false, mesure: false }
+  };
+
+  renderVals() {
+    const mode = this.props.modeBandeau ?? "consentement";
+    const page = this.state.page;
+    const docs = { confidentialite: CONFIDENTIALITE, cgu: CGU };
+
+    const onglets = [
+      { cle: "confidentialite", label: "Confidentialité" },
+      { cle: "cgu", label: "CGU" },
+      { cle: "404", label: "Page 404" }
+    ].map(o => {
+      const actif = page === o.cle;
+      return {
+        label: o.label,
+        fond: actif ? "#800020" : "transparent",
+        encre: actif ? "#F5F5DC" : "#800020",
+        bordure: actif ? "#800020" : "rgba(128,0,32,.22)",
+        choisir: () => this.setState({ page: o.cle })
+      };
+    });
+
+    const consentement = mode === "consentement";
+    const bandeau = consentement
+      ? {
+          titre: "Cookies : à vous de choisir",
+          texte: "Nous utilisons des cookies indispensables au fonctionnement de la réservation. Les autres — confort d'affichage et mesure d'audience anonyme — ne sont posés qu'avec votre accord.",
+          pied: "Aucun cookie publicitaire, aucune revente de données. Refuser ne limite en rien l'accès au site.",
+          consentement: true,
+          information: false
+        }
+      : {
+          titre: "À propos des cookies",
+          texte: "Ce site n'utilise que des cookies indispensables : garder votre réservation en cours et protéger le formulaire contre les robots. Aucune mesure d'audience, aucun cookie publicitaire — votre consentement n'est donc pas requis.",
+          pied: "Ces cookies expirent à la fin de votre visite.",
+          consentement: false,
+          information: true
+        };
+
+    const categories = CATEGORIES.filter(c => consentement || c.verrou).map(c => {
+      const actif = c.verrou || this.state.choix[c.cle];
+      return {
+        nom: c.verrou ? c.nom + " · toujours actifs" : c.nom,
+        desc: c.desc,
+        detail: c.detail,
+        etat: actif ? "Activé" : "Désactivé",
+        etatEncre: actif ? "#3F6B4A" : "#7d4152",
+        switchFond: actif ? (c.verrou ? "#b79aa2" : "#3F6B4A") : "#d9d4b4",
+        switchX: actif ? "21px" : "3px",
+        curseur: c.verrou ? "not-allowed" : "pointer",
+        basculer: c.verrou ? () => {} : () => this.setState(s => ({ choix: { ...s.choix, [c.cle]: !s.choix[c.cle] } }))
+      };
+    });
+
+    return {
+      onglets,
+      estDoc: page !== "404",
+      est404: page === "404",
+      doc: docs[page] ?? CONFIDENTIALITE,
+
+      bandeauVisible: this.state.cookies !== "ferme",
+      vueBandeau: this.state.cookies === "bandeau",
+      vuePanneau: this.state.cookies === "panneau",
+      bandeau,
+      categories,
+      personnaliser: () => this.setState({ cookies: "panneau" }),
+      fermer: () => this.setState({ cookies: "ferme" }),
+      enregistrer: () => this.setState({ cookies: "ferme" }),
+      toutAccepter: () => this.setState({ cookies: "ferme", choix: { essentiels: true, preferences: true, mesure: true } }),
+      toutRefuser: () => this.setState({ cookies: "ferme", choix: { essentiels: true, preferences: false, mesure: false } }),
+      rouvrirCookies: () => this.setState({ cookies: "panneau" })
+    };
+  }
+}
+
+</script>
+</body>
+</html>

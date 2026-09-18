@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#E8E8CC; font-family:"Montserrat",sans-serif; color:#800020; }
+  a { color:#800020; text-decoration:underline; text-underline-offset:2px; }
+  a:hover { color:#A0223B; }
+  * { box-sizing:border-box; }
+</style>
+</helmet>
+
+<div style="padding:48px 40px 96px; display:flex; flex-direction:column; gap:72px; font-family:'Montserrat',sans-serif;">
+
+  <header style="display:flex; flex-direction:column; gap:14px; max-width:760px;">
+    <div style="font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:#A0223B;">L'Intemporel — Cahier des charges, section 6</div>
+    <h1 style="font-family:'Playfair Display',serif; font-size:52px; line-height:1.05; margin:0; font-weight:600; color:#800020;">Module de réservation Brunch</h1>
+    <p style="margin:0; font-size:15px; line-height:1.65; color:#6b2135; max-width:620px;">Douze maquettes : six écrans publics (mobile‑first, 390 px), cinq écrans de back‑office et les trois emails transactionnels. Charte existante — beige #F5F5DC, bordeaux #800020, Playfair Display et Montserrat.</p>
+    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;">
+      <span style="display:flex; align-items:center; gap:7px; background:#F5F5DC; border:1px solid #d9d4b4; border-radius:999px; padding:7px 13px; font-size:12px; font-weight:500;"><span style="width:9px; height:9px; border-radius:999px; background:#3F6B4A;"></span>Disponible</span>
+      <span style="display:flex; align-items:center; gap:7px; background:#F5F5DC; border:1px solid #d9d4b4; border-radius:999px; padding:7px 13px; font-size:12px; font-weight:500;"><span style="width:9px; height:9px; border-radius:999px; background:#9A6B1F;"></span>Presque complet · &lt; 20 %</span>
+      <span style="display:flex; align-items:center; gap:7px; background:#F5F5DC; border:1px solid #d9d4b4; border-radius:999px; padding:7px 13px; font-size:12px; font-weight:500;"><span style="width:9px; height:9px; border-radius:999px; background:#800020;"></span>Complet</span>
+      <span style="display:flex; align-items:center; gap:7px; background:#F5F5DC; border:1px solid #d9d4b4; border-radius:999px; padding:7px 13px; font-size:12px; font-weight:500;"><span style="width:9px; height:9px; border-radius:999px; background:#8A8778;"></span>Fermé</span>
+    </div>
+  </header>
+
+  <section style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:16px; border-bottom:1px solid #cfc9a8; padding-bottom:12px;">
+      <h2 style="font-family:'Playfair Display',serif; font-size:30px; margin:0; font-weight:600;">Parcours public</h2>
+      <span style="font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A0223B;">Écrans 1 à 6 · mobile 390 px</span>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:40px; align-items:flex-start;">
+
+      <div style="display:flex; flex-direction:column; gap:12px; width:390px; flex:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">1</span>
+          <div style="font-size:14px; font-weight:600;">Réservation — vues mois &amp; semaine</div>
+        </div>
+        <div style="font-size:12px; color:#7d4152; line-height:1.55; min-height:32px;">Bascule en haut. Seuls samedis et dimanches sont actifs, navigation bornée à septembre–octobre.</div>
+        <div style="border:9px solid #2a2622; border-radius:34px; overflow:hidden; background:#F5F5DC; box-shadow:0 18px 40px rgba(60,20,30,.18);">
+          <div style="background:#800020; color:#F5F5DC; padding:9px 18px 0; font-size:11px; display:flex; justify-content:space-between;"><span>9:41</span><span>◆◆◆</span></div>
+          <div style="background:#800020; color:#F5F5DC; padding:14px 18px 18px;">
+            <div style="font-size:10px; letter-spacing:.2em; text-transform:uppercase; opacity:.75;">L'Intemporel</div>
+            <div style="font-family:'Playfair Display',serif; font-size:24px; margin-top:5px;">Réserver le brunch</div>
+            <div style="font-size:12px; opacity:.8; margin-top:4px;">Samedi et dimanche · 1 à 12 personnes</div>
+          </div>
+          <div style="padding:16px 18px 24px; display:flex; flex-direction:column; gap:16px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; background:#E8E8CC; border-radius:10px; padding:4px;">
+              <button onClick="{{ voirSemaine }}" style="{{ ongletSemaine }}">Semaine</button>
+              <button onClick="{{ voirMois }}" style="{{ ongletMois }}">Mois</button>
+            </div>
+
+            <sc-if value="{{ estMois }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <button style="width:34px; height:34px; border-radius:999px; border:1px solid #d9d4b4; background:#F5F5DC; color:#c0b9a0; font-size:15px; cursor:not-allowed;">‹</button>
+                  <div style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600;">Septembre 2026</div>
+                  <button style="width:34px; height:34px; border-radius:999px; border:1px solid #800020; background:#F5F5DC; color:#800020; font-size:15px; cursor:pointer;" style-hover="background:#800020; color:#F5F5DC;">›</button>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:5px; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:#a08a92; text-align:center;">
+                  <div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:5px;">
+                  <sc-for list="{{ cellules }}" as="c" hint-placeholder-count="35">
+                    <div style="aspect-ratio:1/1; border-radius:9px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; font-size:13px; font-weight:500; border:1px solid {{ c.bordure }}; background:{{ c.fond }}; color:{{ c.encre }};">
+                      <span>{{ c.num }}</span>
+                      <span style="width:6px; height:6px; border-radius:999px; background:{{ c.point }};"></span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="font-size:11px; color:#7d4152; line-height:1.5; background:#E8E8CC; border-radius:9px; padding:10px 12px;">Les réservations d'une journée ferment à l'heure du premier service de cette journée.</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ estSemaine }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex; flex-direction:column; gap:14px;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <button style="width:34px; height:34px; border-radius:999px; border:1px solid #800020; background:#F5F5DC; color:#800020; font-size:15px; cursor:pointer;">‹</button>
+                  <div style="text-align:center;">
+                    <div style="font-family:'Playfair Display',serif; font-size:17px; font-weight:600;">14 – 20 septembre</div>
+                    <div style="font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#A0223B; margin-top:2px;">Semaine en cours</div>
+                  </div>
+                  <button style="width:34px; height:34px; border-radius:999px; border:1px solid #800020; background:#F5F5DC; color:#800020; font-size:15px; cursor:pointer;">›</button>
+                </div>
+                <sc-for list="{{ joursSemaine }}" as="j" hint-placeholder-count="2">
+                  <div style="border:1px solid #d9d4b4; border-radius:12px; background:#ffffff; overflow:hidden;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:11px 14px; background:#F5F5DC; border-bottom:1px solid #e4dfc2;">
+                      <div style="font-family:'Playfair Display',serif; font-size:16px; font-weight:600;">{{ j.titre }}</div>
+                      <span style="font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:{{ j.point }}; border:1px solid {{ j.point }}; border-radius:999px; padding:4px 9px;">{{ j.etat }}</span>
+                    </div>
+                    <div style="padding:10px 12px; display:flex; flex-direction:column; gap:8px;">
+                      <sc-for list="{{ j.creneaux }}" as="s" hint-placeholder-count="2">
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid {{ s.bordure }}; border-radius:10px; padding:11px 13px; background:{{ s.fond }};">
+                          <div>
+                            <div style="font-size:15px; font-weight:600; color:{{ s.encre }};">{{ s.heure }}</div>
+                            <div style="font-size:11px; color:#7d4152; margin-top:2px;">{{ s.places }}</div>
+                          </div>
+                          <span style="font-size:12px; font-weight:600; color:{{ s.encre }};">{{ s.cta }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; width:390px; flex:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">3</span>
+          <div style="font-size:14px; font-weight:600;">Choix du créneau</div>
+        </div>
+        <div style="font-size:12px; color:#7d4152; line-height:1.55; min-height:32px;">Trois états de carte : disponible, complet, réservations closes.</div>
+        <div style="border:9px solid #2a2622; border-radius:34px; overflow:hidden; background:#F5F5DC; box-shadow:0 18px 40px rgba(60,20,30,.18);">
+          <div style="background:#800020; color:#F5F5DC; padding:9px 18px 0; font-size:11px; display:flex; justify-content:space-between;"><span>9:41</span><span>◆◆◆</span></div>
+          <div style="background:#800020; color:#F5F5DC; padding:12px 18px 16px; display:flex; align-items:center; gap:12px;">
+            <span style="font-size:18px;">‹</span>
+            <div>
+              <div style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; opacity:.75;">Étape 2 sur 3</div>
+              <div style="font-family:'Playfair Display',serif; font-size:20px; margin-top:3px;">Samedi 19 septembre</div>
+            </div>
+          </div>
+          <div style="padding:18px; display:flex; flex-direction:column; gap:12px;">
+            <div style="font-size:12px; color:#7d4152;">Choisissez votre service</div>
+            <div style="border:1.5px solid #3F6B4A; border-radius:13px; padding:15px; background:#ffffff; display:flex; flex-direction:column; gap:9px;">
+              <div style="display:flex; align-items:baseline; justify-content:space-between;">
+                <div style="font-family:'Playfair Display',serif; font-size:21px; font-weight:600;">10h00 – 12h00</div>
+                <span style="font-size:11px; font-weight:600; color:#3F6B4A;">18 places</span>
+              </div>
+              <div style="height:6px; border-radius:999px; background:#E8E8CC; overflow:hidden;"><div style="width:40%; height:100%; background:#3F6B4A;"></div></div>
+              <div style="font-size:11px; color:#7d4152;">12 couverts réservés sur 30</div>
+              <button style="margin-top:4px; border:none; border-radius:9px; background:#800020; color:#F5F5DC; padding:12px; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#600018;">Choisir ce créneau</button>
+            </div>
+            <div style="border:1px solid #d9d4b4; border-radius:13px; padding:15px; background:#EFEDDB; display:flex; flex-direction:column; gap:9px;">
+              <div style="display:flex; align-items:baseline; justify-content:space-between;">
+                <div style="font-family:'Playfair Display',serif; font-size:21px; font-weight:600; color:#8A8778;">12h30 – 14h30</div>
+                <span style="font-size:11px; font-weight:600; color:#800020;">Complet</span>
+              </div>
+              <div style="height:6px; border-radius:999px; background:#E0DDC6; overflow:hidden;"><div style="width:100%; height:100%; background:#800020;"></div></div>
+              <div style="font-size:11px; color:#8A8778;">30 couverts sur 30</div>
+            </div>
+            <div style="border:1px dashed #c3bda2; border-radius:13px; padding:15px; background:#EFEDDB; display:flex; flex-direction:column; gap:6px;">
+              <div style="font-family:'Playfair Display',serif; font-size:21px; font-weight:600; color:#8A8778;">09h30 – 11h30</div>
+              <div style="font-size:11px; color:#8A8778; line-height:1.5;">Réservations closes — le premier service de la journée a commencé.</div>
+            </div>
+            <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:11px; padding:13px; font-size:12px; line-height:1.55; color:#6b2135;">Plus de 12 personnes ? <strong>Contactez‑nous par téléphone</strong> au <a href="tel:+33123456789">01 23 45 67 89</a>.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; width:390px; flex:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">4</span>
+          <div style="font-size:14px; font-weight:600;">Formulaire</div>
+        </div>
+        <div style="font-size:12px; color:#7d4152; line-height:1.55; min-height:32px;">Sélecteur 1–12, coordonnées, consentement RGPD, Turnstile, récapitulatif modifiable.</div>
+        <div style="border:9px solid #2a2622; border-radius:34px; overflow:hidden; background:#F5F5DC; box-shadow:0 18px 40px rgba(60,20,30,.18);">
+          <div style="background:#800020; color:#F5F5DC; padding:9px 18px 0; font-size:11px; display:flex; justify-content:space-between;"><span>9:41</span><span>◆◆◆</span></div>
+          <div style="background:#800020; color:#F5F5DC; padding:12px 18px 16px; display:flex; align-items:center; gap:12px;">
+            <span style="font-size:18px;">‹</span>
+            <div>
+              <div style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; opacity:.75;">Étape 3 sur 3</div>
+              <div style="font-family:'Playfair Display',serif; font-size:20px; margin-top:3px;">Vos coordonnées</div>
+            </div>
+          </div>
+          <div style="padding:18px; display:flex; flex-direction:column; gap:16px;">
+            <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:12px; padding:13px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+              <div>
+                <div style="font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#A0223B;">Votre créneau</div>
+                <div style="font-family:'Playfair Display',serif; font-size:16px; font-weight:600; margin-top:3px;">Sam. 19 sept. · 10h00</div>
+              </div>
+              <button style="border:1px solid #800020; background:transparent; color:#800020; border-radius:8px; padding:8px 12px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:44px;" style-hover="background:#800020; color:#F5F5DC;">Modifier</button>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:9px;">
+              <label style="font-size:12px; font-weight:600;">Nombre de personnes</label>
+              <div style="display:flex; align-items:center; justify-content:space-between; background:#ffffff; border:1px solid #d9d4b4; border-radius:12px; padding:8px 10px;">
+                <button onClick="{{ moins }}" style="width:44px; height:44px; border-radius:9px; border:1px solid #800020; background:#F5F5DC; color:#800020; font-size:20px; cursor:pointer; font-family:'Montserrat',sans-serif;">−</button>
+                <div style="text-align:center;">
+                  <div style="font-family:'Playfair Display',serif; font-size:26px; font-weight:600; line-height:1;">{{ nb }}</div>
+                  <div style="font-size:10px; color:#7d4152; margin-top:3px;">{{ nbLabel }}</div>
+                </div>
+                <button onClick="{{ plus }}" style="width:44px; height:44px; border-radius:9px; border:1px solid #800020; background:#F5F5DC; color:#800020; font-size:20px; cursor:pointer; font-family:'Montserrat',sans-serif;">+</button>
+              </div>
+              <sc-if value="{{ limiteAtteinte }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#800020; color:#F5F5DC; border-radius:10px; padding:12px 13px; font-size:12px; line-height:1.55;">Pour un groupe de plus de 12 personnes, <strong>contactez‑nous par téléphone</strong> au <a href="tel:+33123456789" style="color:#F5F5DC;">01 23 45 67 89</a>.</div>
+              </sc-if>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <label style="font-size:12px; font-weight:600;">Nom</label>
+                <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:10px; padding:13px 12px; font-size:14px; min-height:48px;">Camille Rivet</div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <label style="font-size:12px; font-weight:600;">Email</label>
+                <div style="background:#ffffff; border:1.5px solid #800020; border-radius:10px; padding:13px 12px; font-size:14px; color:#b09aa2; min-height:48px;">camille.rivet@</div>
+                <div style="font-size:11px; color:#800020; font-weight:600;">Adresse email incomplète.</div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <label style="font-size:12px; font-weight:600;">Téléphone</label>
+                <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:10px; padding:13px 12px; font-size:14px; min-height:48px;">06 12 34 56 78</div>
+                <div style="font-size:11px; color:#7d4152;">Pour vous joindre en cas d'imprévu.</div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:10px; align-items:flex-start;">
+              <span style="width:22px; height:22px; border-radius:5px; border:1.5px solid #800020; background:#800020; color:#F5F5DC; font-size:13px; display:flex; align-items:center; justify-content:center; flex:none;">✓</span>
+              <div style="font-size:11.5px; line-height:1.55; color:#6b2135;">J'accepte l'utilisation de mes données pour la gestion de ma réservation. <a href="#">Politique de confidentialité</a>.</div>
+            </div>
+
+            <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:10px; padding:14px; display:flex; align-items:center; gap:11px;">
+              <span style="width:20px; height:20px; border-radius:4px; border:1.5px solid #8A8778;"></span>
+              <div style="font-size:12px; color:#6b6857;">Je ne suis pas un robot</div>
+              <div style="margin-left:auto; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8A8778;">Turnstile</div>
+            </div>
+
+            <button style="border:none; border-radius:11px; background:#800020; color:#F5F5DC; padding:16px; font-size:15px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:52px;" style-hover="background:#600018;">Confirmer ma réservation</button>
+            <div style="display:flex; align-items:center; justify-content:center; gap:9px; border-radius:11px; background:#a8798a; color:#F5F5DC; padding:16px; font-size:14px; font-weight:600;">
+              <span style="width:15px; height:15px; border:2px solid #F5F5DC; border-top-color:transparent; border-radius:999px;"></span>Envoi en cours…
+            </div>
+            <div style="background:#800020; color:#F5F5DC; border-radius:11px; padding:14px; font-size:12px; line-height:1.55;">Ce créneau vient d'être complété. <u>Choisir un autre horaire</u>.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; width:390px; flex:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">5</span>
+          <div style="font-size:14px; font-weight:600;">Confirmation</div>
+        </div>
+        <div style="font-size:12px; color:#7d4152; line-height:1.55; min-height:32px;">Succès, récapitulatif sans données sensibles, règle des 24 h.</div>
+        <div style="border:9px solid #2a2622; border-radius:34px; overflow:hidden; background:#F5F5DC; box-shadow:0 18px 40px rgba(60,20,30,.18);">
+          <div style="background:#800020; color:#F5F5DC; padding:9px 18px 0; font-size:11px; display:flex; justify-content:space-between;"><span>9:41</span><span>◆◆◆</span></div>
+          <div style="background:#800020; color:#F5F5DC; padding:30px 20px 34px; text-align:center;">
+            <div style="width:58px; height:58px; border-radius:999px; border:2px solid #F5F5DC; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:26px;">✓</div>
+            <div style="font-family:'Playfair Display',serif; font-size:25px; line-height:1.2;">Votre table est réservée</div>
+            <div style="font-size:12.5px; opacity:.85; margin-top:8px; line-height:1.55;">Un email de confirmation vous a été envoyé.</div>
+          </div>
+          <div style="padding:20px 18px 26px; display:flex; flex-direction:column; gap:14px;">
+            <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:12px; overflow:hidden;">
+              <div style="display:flex; justify-content:space-between; padding:13px 14px; border-bottom:1px solid #eee7cf; font-size:13px;"><span style="color:#7d4152;">Date</span><strong>Samedi 19 septembre 2026</strong></div>
+              <div style="display:flex; justify-content:space-between; padding:13px 14px; border-bottom:1px solid #eee7cf; font-size:13px;"><span style="color:#7d4152;">Heure</span><strong>10h00 – 12h00</strong></div>
+              <div style="display:flex; justify-content:space-between; padding:13px 14px; border-bottom:1px solid #eee7cf; font-size:13px;"><span style="color:#7d4152;">Personnes</span><strong>4</strong></div>
+              <div style="display:flex; justify-content:space-between; padding:13px 14px; font-size:13px;"><span style="color:#7d4152;">Référence</span><strong>BR‑7F42</strong></div>
+            </div>
+            <div style="background:#E8E8CC; border-radius:12px; padding:14px; font-size:12px; line-height:1.6; color:#6b2135;">
+              <div style="font-weight:600; margin-bottom:5px;">Annulation</div>
+              Jusqu'à 24 h avant le créneau, depuis le lien reçu par email. Ensuite, appelez‑nous au <a href="tel:+33123456789">01 23 45 67 89</a>.
+            </div>
+            <div style="display:flex; flex-direction:column; gap:9px;">
+              <button style="border:none; border-radius:11px; background:#800020; color:#F5F5DC; padding:15px; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="background:#600018;">Ajouter au calendrier</button>
+              <button style="border:1px solid #800020; border-radius:11px; background:transparent; color:#800020; padding:15px; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="background:#800020; color:#F5F5DC;">Voir la carte du brunch</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; width:832px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">6</span>
+          <div style="font-size:14px; font-weight:600;">Page ouverte depuis le lien de l'email — quatre états</div>
+        </div>
+        <div style="font-size:12px; color:#7d4152; line-height:1.55; min-height:32px;">Seul chemin d'annulation : email → lien → <code>/reservation/annuler?token=…</code>. Aucune annulation depuis le site (pas de compte client). Les quatre états dépendent du jeton reçu.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:26px;">
+          <sc-for list="{{ etatsAnnulation }}" as="e" hint-placeholder-count="4">
+            <div style="width:390px; flex:none; border:9px solid #2a2622; border-radius:34px; overflow:hidden; background:#F5F5DC; box-shadow:0 18px 40px rgba(60,20,30,.14);">
+              <div style="background:#800020; color:#F5F5DC; padding:9px 18px 0; font-size:11px; display:flex; justify-content:space-between;"><span>9:41</span><span>◆◆◆</span></div>
+              <div style="background:#800020; color:#F5F5DC; padding:14px 18px 18px;">
+                <div style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; opacity:.75;">{{ e.kicker }}</div>
+                <div style="font-family:'Playfair Display',serif; font-size:21px; margin-top:5px;">{{ e.titre }}</div>
+              </div>
+              <div style="padding:18px; display:flex; flex-direction:column; gap:14px; min-height:330px;">
+                <div style="font-size:13px; line-height:1.6; color:#6b2135;">{{ e.texte }}</div>
+                <sc-if value="{{ e.recap }}" hint-placeholder-val="{{ true }}">
+                  <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:12px; overflow:hidden; opacity:{{ e.recapOpacite }};">
+                    <div style="display:flex; justify-content:space-between; padding:12px 14px; border-bottom:1px solid #eee7cf; font-size:13px;"><span style="color:#7d4152;">Date</span><strong>{{ e.date }}</strong></div>
+                    <div style="display:flex; justify-content:space-between; padding:12px 14px; border-bottom:1px solid #eee7cf; font-size:13px;"><span style="color:#7d4152;">Heure</span><strong>{{ e.heure }}</strong></div>
+                    <div style="display:flex; justify-content:space-between; padding:12px 14px; font-size:13px;"><span style="color:#7d4152;">Personnes</span><strong>{{ e.pax }}</strong></div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ e.tel }}" hint-placeholder-val="{{ false }}">
+                  <a href="tel:+33123456789" style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#800020; color:#F5F5DC; border-radius:12px; padding:18px; text-decoration:none; min-height:52px;">
+                    <span style="font-size:11px; opacity:.8; letter-spacing:.1em; text-transform:uppercase;">Appelez le restaurant</span>
+                    <span style="font-family:'Playfair Display',serif; font-size:24px; font-weight:600;">01 23 45 67 89</span>
+                  </a>
+                </sc-if>
+                <sc-if value="{{ e.bouton }}" hint-placeholder-val="{{ true }}">
+                  <button style="border:none; border-radius:11px; background:#800020; color:#F5F5DC; padding:15px; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="background:#600018;">{{ e.bouton }}</button>
+                </sc-if>
+                <sc-if value="{{ e.lien }}" hint-placeholder-val="{{ true }}">
+                  <button style="border:1px solid #800020; border-radius:11px; background:transparent; color:#800020; padding:15px; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="background:#800020; color:#F5F5DC;">{{ e.lien }}</button>
+                </sc-if>
+                <div style="margin-top:auto; font-size:11px; color:#8A8778; line-height:1.5;">{{ e.pied }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:16px; border-bottom:1px solid #cfc9a8; padding-bottom:12px;">
+      <h2 style="font-family:'Playfair Display',serif; font-size:30px; margin:0; font-weight:600;">Back‑office</h2>
+      <span style="font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A0223B;">Écrans 7 à 11 · sidebar bordeaux existante</span>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">7</span>
+        <div style="font-size:14px; font-weight:600;">Réservations — desktop &amp; salle</div>
+        <span style="font-size:12px; color:#7d4152;">· jauge par créneau, recherche, actions Venu / Absent / Annuler</span>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:26px; align-items:flex-start;">
+        <div style="width:1180px; flex:none; border-radius:16px; overflow:hidden; border:1px solid #cfc9a8; background:#F5F5DC; box-shadow:0 16px 36px rgba(60,20,30,.14); display:flex;">
+          <aside style="width:232px; background:#800020; flex:none; display:flex; flex-direction:column;">
+            <div style="height:60px; display:flex; align-items:center; padding:0 18px; border-bottom:1px solid rgba(255,255,255,.1); font-family:'Playfair Display',serif; font-size:19px; font-weight:700; color:#F5F5DC;">L'Intemporel</div>
+            <nav style="padding:16px; display:flex; flex-direction:column; gap:4px;">
+              <sc-for list="{{ navAdmin }}" as="n" hint-placeholder-count="7">
+                <div style="display:flex; align-items:center; gap:11px; border-radius:9px; padding:10px 12px; font-size:13px; background:{{ n.fond }}; color:{{ n.encre }};">
+                  <span style="width:16px; height:16px; border:1.5px solid currentColor; border-radius:4px; opacity:.85; flex:none;"></span>{{ n.label }}
+                </div>
+              </sc-for>
+            </nav>
+          </aside>
+          <div style="flex:1; min-width:0; display:flex; flex-direction:column;">
+            <div style="height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; background:#F5F5DC; border-bottom:1px solid rgba(128,0,32,.12);">
+              <div style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600;">Réservations</div>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:9px; padding:9px 12px; font-size:12.5px; color:#a08a92; width:200px;">Rechercher un nom…</div>
+                <button style="border:none; border-radius:9px; background:#800020; color:#F5F5DC; padding:10px 14px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#600018;">+ Ajouter une réservation</button>
+              </div>
+            </div>
+            <div style="padding:22px; display:flex; flex-direction:column; gap:18px; background:#F5F5DC;">
+              <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <div style="display:flex; gap:3px; background:#E8E8CC; border-radius:9px; padding:3px;">
+                  <span style="background:#800020; color:#F5F5DC; border-radius:7px; padding:8px 14px; font-size:12.5px; font-weight:600;">Jour</span>
+                  <span style="color:#7d4152; border-radius:7px; padding:8px 14px; font-size:12.5px;">Semaine</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px; margin-left:4px;">
+                  <button style="width:32px; height:32px; border-radius:8px; border:1px solid #d9d4b4; background:#ffffff; color:#800020; cursor:pointer;">‹</button>
+                  <div style="font-family:'Playfair Display',serif; font-size:16px; font-weight:600;">Samedi 19 septembre 2026</div>
+                  <button style="width:32px; height:32px; border-radius:8px; border:1px solid #d9d4b4; background:#ffffff; color:#800020; cursor:pointer;">›</button>
+                </div>
+                <div style="margin-left:auto; display:flex; gap:20px; font-size:12px;">
+                  <div><span style="color:#7d4152;">Couverts du jour </span><strong style="font-size:15px;">42</strong><span style="color:#7d4152;"> / 60</span></div>
+                  <div><span style="color:#7d4152;">Réservations </span><strong style="font-size:15px;">14</strong></div>
+                </div>
+              </div>
+
+              <sc-for list="{{ creneauxAdmin }}" as="c" hint-placeholder-count="2">
+                <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:13px; overflow:hidden;">
+                  <div style="display:flex; align-items:center; gap:18px; padding:14px 18px; border-bottom:1px solid #eee7cf; flex-wrap:wrap;">
+                    <div style="font-family:'Playfair Display',serif; font-size:18px; font-weight:600;">{{ c.heure }}</div>
+                    <div style="flex:1; min-width:180px; display:flex; flex-direction:column; gap:5px;">
+                      <div style="height:8px; border-radius:999px; background:#E8E8CC; overflow:hidden;"><div style="width:{{ c.pct }}; height:100%; background:{{ c.couleur }};"></div></div>
+                      <div style="font-size:11.5px; color:#7d4152;">{{ c.jauge }}</div>
+                    </div>
+                    <span style="font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:{{ c.couleur }}; border:1px solid {{ c.couleur }}; border-radius:999px; padding:5px 10px;">{{ c.statut }}</span>
+                  </div>
+                  <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+                    <thead>
+                      <tr style="background:#FBFAF0; color:#7d4152; text-align:left;">
+                        <th style="padding:10px 18px; font-weight:600;">Nom</th>
+                        <th style="padding:10px 12px; font-weight:600;">Pers.</th>
+                        <th style="padding:10px 12px; font-weight:600;">Téléphone</th>
+                        <th style="padding:10px 12px; font-weight:600;">Statut</th>
+                        <th style="padding:10px 12px; font-weight:600;">Réservé le</th>
+                        <th style="padding:10px 18px; font-weight:600; text-align:right;">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <sc-for list="{{ c.lignes }}" as="r" hint-placeholder-count="4">
+                        <tr style="border-top:1px solid #f0ead4;">
+                          <td style="padding:12px 18px; font-weight:600;">{{ r.nom }}</td>
+                          <td style="padding:12px 12px;">{{ r.pax }}</td>
+                          <td style="padding:12px 12px;"><a href="tel:+33612345678">{{ r.tel }}</a></td>
+                          <td style="padding:12px 12px;"><span style="font-size:11px; font-weight:600; border-radius:999px; padding:4px 9px; color:{{ r.couleur }}; background:{{ r.fond }};">{{ r.statut }}</span></td>
+                          <td style="padding:12px 12px; color:#7d4152;">{{ r.creee }}</td>
+                          <td style="padding:10px 18px; text-align:right;">
+                            <div style="display:flex; gap:6px; justify-content:flex-end;">
+                              <button style="border:1px solid #3F6B4A; color:#3F6B4A; background:transparent; border-radius:7px; padding:7px 10px; font-size:11.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#3F6B4A; color:#ffffff;">Venu</button>
+                              <button style="border:1px solid #9A6B1F; color:#9A6B1F; background:transparent; border-radius:7px; padding:7px 10px; font-size:11.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#9A6B1F; color:#ffffff;">Absent</button>
+                              <button style="border:1px solid #800020; color:#800020; background:transparent; border-radius:7px; padding:7px 10px; font-size:11.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#800020; color:#F5F5DC;">Annuler</button>
+                            </div>
+                          </td>
+                        </tr>
+                      </sc-for>
+                    </tbody>
+                  </table>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px; width:390px; flex:none;">
+          <div style="font-size:12px; color:#7d4152; line-height:1.55;">Version salle : mêmes données en cartes, cibles tactiles 44 px minimum.</div>
+          <div style="border:9px solid #2a2622; border-radius:34px; overflow:hidden; background:#F5F5DC; box-shadow:0 18px 40px rgba(60,20,30,.18);">
+            <div style="background:#800020; color:#F5F5DC; padding:9px 18px 0; font-size:11px; display:flex; justify-content:space-between;"><span>9:41</span><span>◆◆◆</span></div>
+            <div style="background:#800020; color:#F5F5DC; padding:12px 18px 16px; display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; opacity:.75;">Administration</div>
+                <div style="font-family:'Playfair Display',serif; font-size:19px; margin-top:3px;">Sam. 19 sept. · 10h00</div>
+              </div>
+              <span style="font-size:22px;">≡</span>
+            </div>
+            <div style="padding:16px; display:flex; flex-direction:column; gap:12px;">
+              <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:12px; padding:13px 14px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; color:#7d4152;"><span>Remplissage</span><span><strong style="color:#800020; font-size:14px;">24</strong> / 30 couverts</span></div>
+                <div style="height:8px; border-radius:999px; background:#E8E8CC; overflow:hidden; margin-top:8px;"><div style="width:80%; height:100%; background:#9A6B1F;"></div></div>
+              </div>
+              <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:11px; padding:12px 13px; font-size:12.5px; color:#a08a92;">Rechercher un nom…</div>
+              <sc-for list="{{ cartesSalle }}" as="r" hint-placeholder-count="3">
+                <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:11px;">
+                  <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">
+                    <div>
+                      <div style="font-size:15px; font-weight:600;">{{ r.nom }}</div>
+                      <div style="font-size:12px; color:#7d4152; margin-top:3px;">{{ r.pax }} personnes · réservé {{ r.creee }}</div>
+                    </div>
+                    <span style="font-size:10.5px; font-weight:600; border-radius:999px; padding:5px 9px; color:{{ r.couleur }}; background:{{ r.fond }}; flex:none;">{{ r.statut }}</span>
+                  </div>
+                  <a href="tel:+33612345678" style="font-size:13px; font-weight:600;">{{ r.tel }}</a>
+                  <div style="display:flex; gap:7px;">
+                    <button style="flex:1; min-height:44px; border:1px solid #3F6B4A; color:#3F6B4A; background:transparent; border-radius:9px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#3F6B4A; color:#ffffff;">Venu</button>
+                    <button style="flex:1; min-height:44px; border:1px solid #9A6B1F; color:#9A6B1F; background:transparent; border-radius:9px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#9A6B1F; color:#ffffff;">Absent</button>
+                    <button style="flex:1; min-height:44px; border:1px solid #800020; color:#800020; background:transparent; border-radius:9px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#800020; color:#F5F5DC;">Annuler</button>
+                  </div>
+                </div>
+              </sc-for>
+              <button style="border:none; border-radius:11px; background:#800020; color:#F5F5DC; padding:15px; font-size:14px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:48px;" style-hover="background:#600018;">+ Ajouter une réservation</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">8·9</span>
+        <div style="font-size:14px; font-weight:600;">Créneaux — onglets Modèles et Calendrier</div>
+        <span style="font-size:12px; color:#7d4152;">· cliquez les onglets</span>
+      </div>
+      <div style="width:1180px; border-radius:16px; overflow:hidden; border:1px solid #cfc9a8; background:#F5F5DC; box-shadow:0 16px 36px rgba(60,20,30,.14); display:flex;">
+        <aside style="width:232px; background:#800020; flex:none; display:flex; flex-direction:column;">
+          <div style="height:60px; display:flex; align-items:center; padding:0 18px; border-bottom:1px solid rgba(255,255,255,.1); font-family:'Playfair Display',serif; font-size:19px; font-weight:700; color:#F5F5DC;">L'Intemporel</div>
+          <nav style="padding:16px; display:flex; flex-direction:column; gap:4px;">
+            <sc-for list="{{ navAdmin2 }}" as="n" hint-placeholder-count="7">
+              <div style="display:flex; align-items:center; gap:11px; border-radius:9px; padding:10px 12px; font-size:13px; background:{{ n.fond }}; color:{{ n.encre }};">
+                <span style="width:16px; height:16px; border:1.5px solid currentColor; border-radius:4px; opacity:.85; flex:none;"></span>{{ n.label }}
+              </div>
+            </sc-for>
+          </nav>
+        </aside>
+        <div style="flex:1; min-width:0;">
+          <div style="height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; border-bottom:1px solid rgba(128,0,32,.12);">
+            <div style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600;">Créneaux</div>
+            <div style="display:flex; gap:3px; background:#E8E8CC; border-radius:9px; padding:3px;">
+              <button onClick="{{ voirModeles }}" style="{{ ongletModeles }}">Modèles</button>
+              <button onClick="{{ voirCalendrier }}" style="{{ ongletCalendrier }}">Calendrier</button>
+            </div>
+          </div>
+
+          <sc-if value="{{ estModeles }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:22px; display:flex; flex-direction:column; gap:16px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
+                <p style="margin:0; font-size:12.5px; color:#7d4152; line-height:1.6; max-width:560px;">Un modèle décrit un service récurrent. La génération mensuelle crée les créneaux réels à partir des modèles actifs.</p>
+                <button style="border:none; border-radius:9px; background:#800020; color:#F5F5DC; padding:10px 14px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; flex:none;" style-hover="background:#600018;">+ Nouveau modèle</button>
+              </div>
+              <sc-for list="{{ modeles }}" as="g" hint-placeholder-count="2">
+                <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:13px; overflow:hidden;">
+                  <div style="padding:12px 18px; background:#FBFAF0; border-bottom:1px solid #eee7cf; font-family:'Playfair Display',serif; font-size:16px; font-weight:600;">{{ g.jour }}</div>
+                  <sc-for list="{{ g.lignes }}" as="m" hint-placeholder-count="2">
+                    <div style="display:flex; align-items:center; gap:22px; padding:14px 18px; border-top:1px solid #f0ead4; font-size:13px;">
+                      <div style="font-weight:600; width:150px;">{{ m.heures }}</div>
+                      <div style="color:#7d4152; width:130px;">Capacité {{ m.capacite }}</div>
+                      <div style="display:flex; align-items:center; gap:9px;">
+                        <span style="width:38px; height:22px; border-radius:999px; background:{{ m.switchFond }}; position:relative; display:inline-block;"><span style="position:absolute; top:3px; left:{{ m.switchX }}; width:16px; height:16px; border-radius:999px; background:#ffffff;"></span></span>
+                        <span style="color:{{ m.actifEncre }}; font-weight:600; font-size:12px;">{{ m.actifLabel }}</span>
+                      </div>
+                      <div style="margin-left:auto; display:flex; gap:7px;">
+                        <button style="border:1px solid #800020; color:#800020; background:transparent; border-radius:7px; padding:7px 12px; font-size:11.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#800020; color:#F5F5DC;">Modifier</button>
+                        <button style="border:1px solid #d9d4b4; color:#8A8778; background:transparent; border-radius:7px; padding:7px 12px; font-size:11.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="border-color:#800020; color:#800020;">Supprimer</button>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ estCalendrier }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:22px; display:flex; gap:22px; align-items:flex-start;">
+              <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:14px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <button style="width:32px; height:32px; border-radius:8px; border:1px solid #d9d4b4; background:#ffffff; color:#800020; cursor:pointer;">‹</button>
+                    <div style="font-family:'Playfair Display',serif; font-size:17px; font-weight:600;">Octobre 2026</div>
+                    <button style="width:32px; height:32px; border-radius:8px; border:1px solid #d9d4b4; background:#ffffff; color:#800020; cursor:pointer;">›</button>
+                  </div>
+                  <button style="border:none; border-radius:9px; background:#800020; color:#F5F5DC; padding:10px 14px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#600018;">Générer les créneaux du mois</button>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:7px; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:#a08a92; text-align:center;">
+                  <div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:7px;">
+                  <sc-for list="{{ cellulesAdmin }}" as="c" hint-placeholder-count="35">
+                    <div style="min-height:92px; border-radius:10px; border:1px solid {{ c.bordure }}; background:{{ c.fond }}; padding:7px 8px; display:flex; flex-direction:column; gap:5px;">
+                      <div style="font-size:12px; font-weight:600; color:{{ c.encre }};">{{ c.num }}</div>
+                      <sc-for list="{{ c.creneaux }}" as="s" hint-placeholder-count="0">
+                        <div style="border-radius:6px; padding:4px 6px; font-size:10px; font-weight:600; background:{{ s.fond }}; color:{{ s.encre }};">{{ s.label }}</div>
+                      </sc-for>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="width:288px; flex:none; background:#ffffff; border:1px solid #d9d4b4; border-radius:13px; padding:16px; display:flex; flex-direction:column; gap:13px;">
+                <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#A0223B;">Créneau sélectionné</div>
+                <div style="font-family:'Playfair Display',serif; font-size:18px; font-weight:600;">Dim. 11 oct. · 12h30 – 14h30</div>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                  <div style="font-size:12px; color:#7d4152;">Capacité</div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="flex:1; background:#F5F5DC; border:1px solid #d9d4b4; border-radius:9px; padding:11px 12px; font-size:14px; font-weight:600;">30</div>
+                    <button style="border:none; border-radius:9px; background:#800020; color:#F5F5DC; padding:11px 14px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;">Enregistrer</button>
+                  </div>
+                  <div style="font-size:11px; color:#7d4152; line-height:1.5;">18 couverts déjà réservés : la capacité ne peut pas descendre sous 18.</div>
+                </div>
+                <div style="height:1px; background:#eee7cf;"></div>
+                <button style="border:1px solid #800020; color:#800020; background:transparent; border-radius:9px; padding:12px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#800020; color:#F5F5DC;">Fermer le créneau</button>
+                <button style="border:1px solid #d9d4b4; color:#8A8778; background:transparent; border-radius:9px; padding:12px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;">Rouvrir le créneau</button>
+                <button onClick="{{ ouvrirModal }}" style="border:none; border-radius:9px; background:#800020; color:#F5F5DC; padding:12px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#600018;">Annuler le créneau…</button>
+                <div style="font-size:11px; color:#8A8778; line-height:1.5;">L'annulation prévient les clients par email et fournit la liste à appeler.</div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">10</span>
+        <div style="font-size:14px; font-weight:600;">Modal « Annuler un créneau » — avant et après</div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:26px;">
+        <div style="width:520px; flex:none; background:#ffffff; border:1px solid #cfc9a8; border-radius:15px; box-shadow:0 20px 44px rgba(60,20,30,.2); overflow:hidden;">
+          <div style="padding:18px 20px; border-bottom:1px solid #eee7cf;">
+            <div style="font-family:'Playfair Display',serif; font-size:20px; font-weight:600;">Annuler le créneau</div>
+            <div style="font-size:12.5px; color:#7d4152; margin-top:4px;">Dimanche 11 octobre · 12h30 – 14h30</div>
+          </div>
+          <div style="padding:20px; display:flex; flex-direction:column; gap:16px;">
+            <div style="background:#800020; color:#F5F5DC; border-radius:11px; padding:14px; font-size:12.5px; line-height:1.6;"><strong>6 réservations · 18 couverts</strong> seront annulés. Un email d'annulation sera envoyé à chaque client.</div>
+            <div style="display:flex; flex-direction:column; gap:7px;">
+              <label style="font-size:12.5px; font-weight:600;">Motif (visible dans l'email)</label>
+              <div style="background:#F5F5DC; border:1px solid #d9d4b4; border-radius:10px; padding:13px; font-size:13px; min-height:80px; line-height:1.6;">Fermeture exceptionnelle de la cuisine.</div>
+            </div>
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+              <button style="border:1px solid #d9d4b4; color:#7d4152; background:transparent; border-radius:9px; padding:12px 16px; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;">Retour</button>
+              <button style="border:none; border-radius:9px; background:#800020; color:#F5F5DC; padding:12px 16px; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;" style-hover="background:#600018;">Annuler le créneau et prévenir</button>
+            </div>
+          </div>
+        </div>
+        <div style="width:520px; flex:none; background:#ffffff; border:1px solid #cfc9a8; border-radius:15px; box-shadow:0 20px 44px rgba(60,20,30,.2); overflow:hidden;">
+          <div style="padding:18px 20px; border-bottom:1px solid #eee7cf;">
+            <div style="font-family:'Playfair Display',serif; font-size:20px; font-weight:600;">Clients à appeler</div>
+            <div style="font-size:12.5px; color:#7d4152; margin-top:4px;">Emails envoyés · cochez au fur et à mesure</div>
+          </div>
+          <div style="padding:14px 20px 20px; display:flex; flex-direction:column;">
+            <sc-for list="{{ aAppeler }}" as="p" hint-placeholder-count="4">
+              <div style="display:flex; align-items:center; gap:13px; padding:13px 0; border-bottom:1px solid #f0ead4;">
+                <span style="width:22px; height:22px; border-radius:5px; border:1.5px solid {{ p.caseBordure }}; background:{{ p.caseFond }}; color:#F5F5DC; font-size:13px; display:flex; align-items:center; justify-content:center; flex:none;">{{ p.coche }}</span>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:13.5px; font-weight:600; color:{{ p.encre }};">{{ p.nom }}</div>
+                  <div style="font-size:11.5px; color:#7d4152;">{{ p.pax }} personnes</div>
+                </div>
+                <a href="tel:+33612345678" style="font-size:13px; font-weight:600;">{{ p.tel }}</a>
+                <span style="font-size:11px; color:#8A8778; width:62px; text-align:right;">{{ p.etat }}</span>
+              </div>
+            </sc-for>
+            <button style="margin-top:16px; align-self:flex-end; border:none; border-radius:9px; background:#800020; color:#F5F5DC; padding:12px 16px; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer;">Terminer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">11</span>
+        <div style="font-size:14px; font-weight:600;">Widget dashboard « Brunch ce weekend »</div>
+      </div>
+      <div style="width:520px; background:#ffffff; border:1px solid #d9d4b4; border-radius:14px; padding:20px; display:flex; flex-direction:column; gap:16px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between;">
+          <div style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600;">Brunch ce weekend</div>
+          <a href="#" style="font-size:12px; font-weight:600;">Voir les réservations</a>
+        </div>
+        <sc-for list="{{ widget }}" as="w" hint-placeholder-count="2">
+          <div style="display:flex; flex-direction:column; gap:7px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; font-size:13px;">
+              <span style="font-weight:600;">{{ w.jour }}</span>
+              <span style="color:#7d4152;"><strong style="color:#800020; font-size:16px;">{{ w.couverts }}</strong> / {{ w.capacite }} couverts</span>
+            </div>
+            <div style="height:9px; border-radius:999px; background:#E8E8CC; overflow:hidden;"><div style="width:{{ w.pct }}; height:100%; background:{{ w.couleur }};"></div></div>
+            <div style="font-size:11.5px; color:#7d4152;">{{ w.detail }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:16px; border-bottom:1px solid #cfc9a8; padding-bottom:12px;">
+      <h2 style="font-family:'Playfair Display',serif; font-size:30px; margin:0; font-weight:600;">Emails</h2>
+      <span style="font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A0223B;">Écran 12 · un destinataire par envoi, largeur 600 px</span>
+    </div>
+    <div style="display:flex; flex-wrap:wrap; gap:26px; align-items:flex-start;">
+      <sc-for list="{{ emails }}" as="m" hint-placeholder-count="3">
+        <div style="width:520px; flex:none; display:flex; flex-direction:column; gap:10px;">
+          <div style="font-size:13px; font-weight:600;">{{ m.nom }}</div>
+          <div style="background:#ffffff; border:1px solid #cfc9a8; border-radius:14px; overflow:hidden; box-shadow:0 14px 30px rgba(60,20,30,.12);">
+            <div style="padding:12px 16px; background:#FBFAF0; border-bottom:1px solid #eee7cf; font-size:11.5px; color:#7d4152; display:flex; flex-direction:column; gap:3px;">
+              <div><strong style="color:#800020;">Objet</strong> · {{ m.objet }}</div>
+              <div>De : L'Intemporel &lt;reservations@lintemporel.fr&gt;</div>
+            </div>
+            <div style="background:#800020; color:#F5F5DC; padding:26px 24px; text-align:center;">
+              <div style="font-size:10px; letter-spacing:.24em; text-transform:uppercase; opacity:.75;">L'Intemporel</div>
+              <div style="font-family:'Playfair Display',serif; font-size:24px; margin-top:8px; line-height:1.25;">{{ m.titre }}</div>
+            </div>
+            <div style="padding:22px 24px 26px; display:flex; flex-direction:column; gap:16px; background:#F5F5DC;">
+              <div style="font-size:13.5px; line-height:1.65; color:#6b2135;">{{ m.corps }}</div>
+              <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:11px; overflow:hidden;">
+                <sc-for list="{{ m.lignes }}" as="l" hint-placeholder-count="3">
+                  <div style="display:flex; justify-content:space-between; gap:12px; padding:12px 14px; border-bottom:1px solid #f0ead4; font-size:13px;">
+                    <span style="color:#7d4152;">{{ l.k }}</span><strong style="text-align:right;">{{ l.v }}</strong>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ m.motif }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#E8E8CC; border-radius:11px; padding:14px; font-size:12.5px; line-height:1.6; color:#6b2135;"><strong>Motif</strong> · {{ m.motif }}</div>
+              </sc-if>
+              <a href="#" style="text-align:center; background:#800020; color:#F5F5DC; border-radius:10px; padding:15px; font-size:14px; font-weight:600; text-decoration:none;">{{ m.cta }}</a>
+              <div style="font-size:11.5px; line-height:1.6; color:#7d4152; text-align:center;">{{ m.pied }}</div>
+              <div style="font-size:11px; line-height:1.6; color:#8A8778; text-align:center; border-top:1px solid #ded8ba; padding-top:14px;">12 rue des Arts, 75000 Paris · <a href="tel:+33123456789">01 23 45 67 89</a><br>Vos coordonnées sont effacées 30 jours après votre venue.</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:16px; border-bottom:1px solid #cfc9a8; padding-bottom:12px;">
+      <h2 style="font-family:'Playfair Display',serif; font-size:30px; margin:0; font-weight:600;">Pages légales &amp; états système</h2>
+      <span style="font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A0223B;">Écrans 13 à 16 · hors périmètre initial</span>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:40px; align-items:flex-start;">
+
+      <div style="display:flex; flex-direction:column; gap:12px; width:760px; flex:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">13</span>
+          <div style="font-size:14px; font-weight:600;">Politique de confidentialité — /confidentialite</div>
+        </div>
+        <div style="font-size:12px; color:#7d4152; line-height:1.55;">Liée depuis la case de consentement du formulaire et le pied des emails. Contenu à valider par le restaurant.</div>
+        <div style="background:#ffffff; border:1px solid #cfc9a8; border-radius:16px; overflow:hidden; box-shadow:0 16px 36px rgba(60,20,30,.12);">
+          <div style="background:#800020; color:#F5F5DC; padding:30px 40px;">
+            <div style="font-size:10px; letter-spacing:.24em; text-transform:uppercase; opacity:.75;">L'Intemporel</div>
+            <div style="font-family:'Playfair Display',serif; font-size:30px; margin-top:8px;">Politique de confidentialité</div>
+            <div style="font-size:12.5px; opacity:.8; margin-top:7px;">Dernière mise à jour : 16 septembre 2026</div>
+          </div>
+          <div style="padding:34px 40px 40px; display:flex; flex-direction:column; gap:26px; background:#F5F5DC;">
+            <p style="margin:0; font-size:14px; line-height:1.7; color:#6b2135;">Cette page décrit les données que nous collectons lorsque vous réservez un brunch, pourquoi nous les collectons et combien de temps nous les conservons. Nous ne collectons rien d'autre que ce qui est nécessaire pour vous accueillir.</p>
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600;">Données collectées</div>
+              <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:12px; overflow:hidden;">
+                <div style="display:flex; gap:16px; padding:13px 16px; border-bottom:1px solid #f0ead4; font-size:13px;"><strong style="width:150px; flex:none;">Nom</strong><span style="color:#6b2135; line-height:1.55;">Identifier votre table à l'arrivée.</span></div>
+                <div style="display:flex; gap:16px; padding:13px 16px; border-bottom:1px solid #f0ead4; font-size:13px;"><strong style="width:150px; flex:none;">Email</strong><span style="color:#6b2135; line-height:1.55;">Confirmation, lien d'annulation, information en cas de fermeture.</span></div>
+                <div style="display:flex; gap:16px; padding:13px 16px; border-bottom:1px solid #f0ead4; font-size:13px;"><strong style="width:150px; flex:none;">Téléphone</strong><span style="color:#6b2135; line-height:1.55;">Vous joindre en cas d'imprévu le jour même.</span></div>
+                <div style="display:flex; gap:16px; padding:13px 16px; font-size:13px;"><strong style="width:150px; flex:none;">Nombre de personnes</strong><span style="color:#6b2135; line-height:1.55;">Gérer la capacité de la salle.</span></div>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600;">Base légale &amp; durée de conservation</div>
+              <p style="margin:0; font-size:14px; line-height:1.7; color:#6b2135;">Le traitement repose sur l'exécution de votre demande de réservation et sur votre consentement, recueilli par la case à cocher du formulaire. Vos coordonnées sont automatiquement effacées <strong>30 jours après la date du service</strong>. Nous ne les utilisons jamais à des fins publicitaires et ne les transmettons à aucun tiers commercial.</p>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600;">Sous‑traitants</div>
+              <p style="margin:0; font-size:14px; line-height:1.7; color:#6b2135;">Hébergement et base de données (Union européenne), service d'envoi des emails transactionnels, et protection anti‑robot du formulaire. Ces prestataires agissent sur nos instructions et n'exploitent pas vos données pour leur propre compte.</p>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600;">Vos droits</div>
+              <p style="margin:0; font-size:14px; line-height:1.7; color:#6b2135;">Vous pouvez demander l'accès, la rectification ou la suppression de vos données, ainsi que retirer votre consentement. Écrivez à <a href="mailto:contact@lintemporel.fr">contact@lintemporel.fr</a> ou appelez le <a href="tel:+33123456789">01 23 45 67 89</a> : nous répondons sous 30 jours. Vous pouvez également saisir la CNIL.</p>
+            </div>
+
+            <div style="background:#E8E8CC; border-radius:12px; padding:18px 20px; font-size:13px; line-height:1.65; color:#6b2135;">
+              <strong>Cookies</strong> · Le site n'utilise que les cookies strictement nécessaires à son fonctionnement et à la protection du formulaire contre les robots. Aucun cookie publicitaire, aucune mesure d'audience. Voir l'encart ci‑dessous.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; width:760px; flex:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">14</span>
+          <div style="font-size:14px; font-weight:600;">Conditions générales de réservation — /cgu</div>
+        </div>
+        <div style="font-size:12px; color:#7d4152; line-height:1.55;">Règles opérationnelles du module : horaires, jauge, 12 personnes, fenêtre d'annulation de 24 h.</div>
+        <div style="background:#ffffff; border:1px solid #cfc9a8; border-radius:16px; overflow:hidden; box-shadow:0 16px 36px rgba(60,20,30,.12);">
+          <div style="background:#800020; color:#F5F5DC; padding:30px 40px;">
+            <div style="font-size:10px; letter-spacing:.24em; text-transform:uppercase; opacity:.75;">L'Intemporel</div>
+            <div style="font-family:'Playfair Display',serif; font-size:30px; margin-top:8px;">Conditions générales de réservation</div>
+            <div style="font-size:12.5px; opacity:.8; margin-top:7px;">Applicables au service brunch du samedi et du dimanche</div>
+          </div>
+          <div style="padding:34px 40px 40px; display:flex; flex-direction:column; gap:24px; background:#F5F5DC;">
+            <div style="display:flex; gap:18px;">
+              <div style="font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:#A0223B; width:34px; flex:none;">1</div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <div style="font-size:15px; font-weight:600;">Objet</div>
+                <p style="margin:0; font-size:14px; line-height:1.7; color:#6b2135;">La réservation en ligne permet de retenir une table pour l'un des services de brunch, dans la limite des places disponibles. Elle est gratuite et sans acompte.</p>
+              </div>
+            </div>
+            <div style="height:1px; background:#ded8ba;"></div>
+            <div style="display:flex; gap:18px;">
+              <div style="font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:#A0223B; width:34px; flex:none;">2</div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <div style="font-size:15px; font-weight:600;">Taille du groupe</div>
+                <p style="margin:0; font-size:14px; line-height:1.7; color:#6b2135;">De 1 à 12 personnes par réservation. Au‑delà de 12 personnes, la réservation se fait uniquement par téléphone au <a href="tel:+33123456789">01 23 45 67 89</a>.</p>
+              </div>
+            </div>
+            <div style="height:1px; background:#ded8ba;"></div>
+            <div style="display:flex; gap:18px;">
+              <div style="font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:#A0223B; width:34px; flex:none;">3</div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <div style="font-size:15px; font-weight:600;">Horaires et retard</div>
+                <p style="margin:0; font-size:14px; line-height:1.7; color:#6b2135;">Les réservations d'une journée ferment à l'heure du premier service de cette journée. La table est conservée <strong>20 minutes</strong> après l'heure réservée ; passé ce délai, elle peut être réattribuée.</p>
+              </div>
+            </div>
+            <div style="height:1px; background:#ded8ba;"></div>
+            <div style="display:flex; gap:18px;">
+              <div style="font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:#A0223B; width:34px; flex:none;">4</div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <div style="font-size:15px; font-weight:600;">Annulation</div>
+                <p style="margin:0; font-size:14px; line-height:1.7; color:#6b2135;">L'annulation s'effectue exclusivement depuis le lien personnel reçu par email, jusqu'à <strong>24 heures</strong> avant le début du service. Dans les 24 dernières heures, prévenez‑nous par téléphone. Le restaurant peut annuler un service pour raison exceptionnelle : les clients concernés sont alors prévenus par email et, si possible, par téléphone.</p>
+              </div>
+            </div>
+            <div style="height:1px; background:#ded8ba;"></div>
+            <div style="display:flex; gap:18px;">
+              <div style="font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:#A0223B; width:34px; flex:none;">5</div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <div style="font-size:15px; font-weight:600;">Données personnelles</div>
+                <p style="margin:0; font-size:14px; line-height:1.7; color:#6b2135;">Le traitement de vos données est décrit dans la <a href="#">politique de confidentialité</a>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; width:760px; flex:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">15</span>
+          <div style="font-size:14px; font-weight:600;">Cookies — deux cas selon ce que vous déposez</div>
+        </div>
+        <div style="font-size:12px; color:#7d4152; line-height:1.55;">Tel que spécifié (pas de mesure d'audience), seul l'encart informatif de gauche est requis. Le bandeau de droite ne devient obligatoire que si vous ajoutez un outil de statistiques.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:24px;">
+          <div style="width:368px; flex:none; display:flex; flex-direction:column; gap:10px;">
+            <div style="font-size:11.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#3F6B4A;">Cas actuel — cookies nécessaires seuls</div>
+            <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:14px; padding:20px; display:flex; flex-direction:column; gap:12px;">
+              <div style="font-family:'Playfair Display',serif; font-size:17px; font-weight:600;">Aucun consentement à demander</div>
+              <p style="margin:0; font-size:13px; line-height:1.65; color:#6b2135;">Session de réservation et jeton anti‑robot uniquement : exemptés de consentement. Une simple mention dans le pied de page et la politique de confidentialité suffit.</p>
+              <div style="background:#E8E8CC; border-radius:10px; padding:13px 14px; font-size:12.5px; line-height:1.6; color:#6b2135;">« Ce site n'utilise que les cookies nécessaires à la réservation. <a href="#">En savoir plus</a>. »</div>
+            </div>
+          </div>
+          <div style="width:368px; flex:none; display:flex; flex-direction:column; gap:10px;">
+            <div style="font-size:11.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#9A6B1F;">Si vous ajoutez des statistiques</div>
+            <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:14px; padding:0; overflow:hidden;">
+              <div style="height:118px; background:#E8E8CC; display:flex; align-items:center; justify-content:center; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#a09a82;">page de réservation</div>
+              <div style="background:#800020; color:#F5F5DC; padding:18px; display:flex; flex-direction:column; gap:13px;">
+                <div style="font-family:'Playfair Display',serif; font-size:16px;">Cookies</div>
+                <p style="margin:0; font-size:12.5px; line-height:1.6; opacity:.92;">Nous utilisons des cookies nécessaires au fonctionnement du site et, avec votre accord, des cookies de mesure d'audience.</p>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                  <button style="border:none; border-radius:9px; background:#F5F5DC; color:#800020; padding:13px; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:44px;">Tout accepter</button>
+                  <button style="border:1px solid rgba(245,245,220,.6); border-radius:9px; background:transparent; color:#F5F5DC; padding:13px; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:44px;">Continuer sans accepter</button>
+                  <button style="border:none; background:transparent; color:#F5F5DC; padding:6px; font-size:12px; font-weight:600; font-family:'Montserrat',sans-serif; text-decoration:underline; cursor:pointer;">Personnaliser</button>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:11.5px; color:#7d4152; line-height:1.55;">Refuser doit être aussi simple qu'accepter : les deux boutons ont le même poids, et le choix est conservé 6 mois.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; width:760px; flex:none;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:'Playfair Display',serif; font-size:13px; font-weight:600; background:#800020; color:#F5F5DC; width:26px; height:26px; border-radius:999px; display:flex; align-items:center; justify-content:center;">16</span>
+          <div style="font-size:14px; font-weight:600;">404 personnalisée — et 500</div>
+        </div>
+        <div style="font-size:12px; color:#7d4152; line-height:1.55;">Sorties de route toujours ramenées vers la réservation ou le téléphone.</div>
+        <div style="background:#ffffff; border:1px solid #cfc9a8; border-radius:16px; overflow:hidden; box-shadow:0 16px 36px rgba(60,20,30,.12);">
+          <div style="background:#800020; color:#F5F5DC; padding:56px 40px 60px; text-align:center;">
+            <div style="font-family:'Playfair Display',serif; font-size:76px; line-height:1; font-weight:600; opacity:.9;">404</div>
+            <div style="font-family:'Playfair Display',serif; font-size:26px; margin-top:16px;">Cette page n'est plus au menu</div>
+            <p style="margin:12px auto 0; font-size:13.5px; line-height:1.65; opacity:.85; max-width:400px;">Le lien est peut‑être ancien ou mal recopié. Voici par où continuer.</p>
+          </div>
+          <div style="padding:28px 40px 34px; background:#F5F5DC; display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <a href="#" style="flex:1; min-width:200px; text-align:center; background:#800020; color:#F5F5DC; border-radius:11px; padding:16px; font-size:14px; font-weight:600; text-decoration:none;">Réserver un brunch</a>
+              <a href="#" style="flex:1; min-width:200px; text-align:center; border:1px solid #800020; border-radius:11px; padding:16px; font-size:14px; font-weight:600; text-decoration:none;">Voir la carte</a>
+            </div>
+            <div style="font-size:12.5px; color:#7d4152; line-height:1.6; text-align:center;">Vous cherchiez à annuler une réservation ? Le lien se trouve dans votre email de confirmation. Sinon, appelez le <a href="tel:+33123456789">01 23 45 67 89</a>.</div>
+          </div>
+        </div>
+        <div style="background:#ffffff; border:1px solid #d9d4b4; border-radius:14px; padding:20px 22px; display:flex; align-items:center; gap:20px;">
+          <div style="font-family:'Playfair Display',serif; font-size:34px; font-weight:600; color:#A0223B; flex:none;">500</div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="font-size:14px; font-weight:600;">Une erreur est survenue de notre côté</div>
+            <div style="font-size:12.5px; line-height:1.6; color:#6b2135;">Même habillage que la 404. Message clé : <em>si vous étiez en train de réserver, votre réservation n'a pas été enregistrée</em> — réessayez ou appelez‑nous.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const VERT = "#3F6B4A", OCRE = "#9A6B1F", BORD = "#800020", GRIS = "#8A8778";
+
+class Component extends DCLogic {
+  state = { vue: "mois", nb: 4, tab: "modeles" };
+
+  onglet(actif) {
+    return `border:none; border-radius:8px; padding:11px 10px; font-size:13px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:44px; background:${actif ? "#800020" : "transparent"}; color:${actif ? "#F5F5DC" : "#7d4152"};`;
+  }
+  ongletAdmin(actif) {
+    return `border:none; border-radius:7px; padding:8px 16px; font-size:12.5px; font-weight:600; font-family:'Montserrat',sans-serif; cursor:pointer; background:${actif ? "#800020" : "transparent"}; color:${actif ? "#F5F5DC" : "#7d4152"};`;
+  }
+
+  cellulesMois() {
+    const etats = {
+      5: "passe", 6: "passe", 12: "passe", 13: "passe",
+      19: "dispo", 20: "presque", 26: "complet", 27: "dispo"
+    };
+    const cells = [{ num: "", fond: "transparent", bordure: "transparent", encre: "transparent", point: "transparent" }];
+    for (let d = 1; d <= 30; d++) {
+      const e = etats[d];
+      let fond = "transparent", bordure = "transparent", encre = "#c4bda6", point = "transparent";
+      if (e === "dispo") { fond = "#ffffff"; bordure = VERT; encre = BORD; point = VERT; }
+      else if (e === "presque") { fond = "#ffffff"; bordure = OCRE; encre = BORD; point = OCRE; }
+      else if (e === "complet") { fond = "#EFEDDB"; bordure = "#e0c9cf"; encre = BORD; point = BORD; }
+      else if (e === "passe") { fond = "#EFEDDB"; bordure = "#e0ddc6"; encre = GRIS; point = GRIS; }
+      cells.push({ num: String(d), fond, bordure, encre, point });
+    }
+    return cells;
+  }
+
+  joursSemaine() {
+    return [
+      { titre: "Samedi 19 septembre", etat: "Disponible", point: VERT, creneaux: [
+        { heure: "10h00 – 12h00", places: "18 places restantes", cta: "Réserver", fond: "#ffffff", bordure: VERT, encre: BORD },
+        { heure: "12h30 – 14h30", places: "5 places restantes", cta: "Réserver", fond: "#ffffff", bordure: OCRE, encre: BORD }
+      ]},
+      { titre: "Dimanche 20 septembre", etat: "Presque complet", point: OCRE, creneaux: [
+        { heure: "10h00 – 12h00", places: "3 places restantes", cta: "Réserver", fond: "#ffffff", bordure: OCRE, encre: BORD },
+        { heure: "12h30 – 14h30", places: "30 couverts sur 30", cta: "Complet", fond: "#EFEDDB", bordure: "#e0ddc6", encre: GRIS }
+      ]}
+    ];
+  }
+
+  etatsAnnulation() {
+    return [
+      { kicker: "Votre réservation", titre: "Annuler ma réservation", texte: "Vous pouvez annuler jusqu'à 24 h avant le début du service.", recap: true, recapOpacite: "1", date: "Samedi 19 septembre", heure: "10h00 – 12h00", pax: "4", tel: false, bouton: "Annuler ma réservation", lien: "", pied: "Un email de confirmation d'annulation vous sera envoyé." },
+      { kicker: "Moins de 24 h", titre: "Annulation par téléphone", texte: "Votre service commence dans moins de 24 h : l'annulation en ligne n'est plus possible. Appelez‑nous, nous nous en occupons.", recap: true, recapOpacite: "1", date: "Demain, dimanche 20 sept.", heure: "10h00 – 12h00", pax: "2", tel: true, bouton: "", lien: "", pied: "Merci de nous prévenir : cela libère la table pour d'autres clients." },
+      { kicker: "Réservation annulée", titre: "Déjà annulée", texte: "Cette réservation a été annulée le 14 septembre à 18h12. Aucune table n'est retenue à votre nom.", recap: true, recapOpacite: "0.55", date: "Samedi 19 septembre", heure: "10h00 – 12h00", pax: "4", tel: false, bouton: "", lien: "Réserver un nouveau créneau", pied: "Vous recevez cet écran depuis un lien déjà utilisé." },
+      { kicker: "Lien invalide", titre: "Ce lien n'est plus valable", texte: "Le lien est incomplet, expiré, ou la réservation a été effacée (les coordonnées sont supprimées 30 jours après la venue).", recap: false, recapOpacite: "1", date: "", heure: "", pax: "", tel: false, bouton: "", lien: "Réserver un créneau", pied: "Besoin d'aide ? Appelez le 01 23 45 67 89." }
+    ];
+  }
+
+  nav(actif) {
+    return ["Dashboard", "Réservations", "Créneaux", "Plats", "Catégories", "Options", "Paramètres"].map(l => ({
+      label: l,
+      fond: l === actif ? "rgba(255,255,255,.2)" : "transparent",
+      encre: l === actif ? "#F5F5DC" : "rgba(245,245,220,.7)"
+    }));
+  }
+
+  lignes(rows) {
+    const styles = {
+      "Confirmée": { couleur: VERT, fond: "#EAF0EA" },
+      "Venue": { couleur: BORD, fond: "#F3E7EA" },
+      "Absent": { couleur: OCRE, fond: "#F5EFE0" },
+      "Annulée client": { couleur: GRIS, fond: "#EFEDDB" }
+    };
+    return rows.map(r => ({ ...r, couleur: styles[r.statut].couleur, fond: styles[r.statut].fond }));
+  }
+
+  renderVals() {
+    const nb = this.state.nb;
+    const navBase = this.nav("Réservations");
+    const salle = this.lignes([
+      { nom: "Camille Rivet", pax: 4, tel: "06 12 34 56 78", statut: "Confirmée", creee: "14 sept." },
+      { nom: "Antoine Berger", pax: 2, tel: "06 98 76 54 32", statut: "Venue", creee: "12 sept." },
+      { nom: "Léa Fontaine", pax: 6, tel: "07 45 12 78 90", statut: "Confirmée", creee: "15 sept." }
+    ]);
+
+    return {
+      nb,
+      nbLabel: nb > 1 ? "personnes" : "personne",
+      limiteAtteinte: nb >= 12,
+      moins: () => this.setState(s => ({ nb: Math.max(1, s.nb - 1) })),
+      plus: () => this.setState(s => ({ nb: Math.min(12, s.nb + 1) })),
+
+      estMois: this.state.vue === "mois",
+      estSemaine: this.state.vue === "semaine",
+      voirMois: () => this.setState({ vue: "mois" }),
+      voirSemaine: () => this.setState({ vue: "semaine" }),
+      ongletMois: this.onglet(this.state.vue === "mois"),
+      ongletSemaine: this.onglet(this.state.vue === "semaine"),
+
+      cellules: this.cellulesMois(),
+      joursSemaine: this.joursSemaine(),
+      etatsAnnulation: this.etatsAnnulation(),
+
+      navAdmin: navBase,
+      navAdmin2: this.nav("Créneaux"),
+
+      estModeles: this.state.tab === "modeles",
+      estCalendrier: this.state.tab === "calendrier",
+      voirModeles: () => this.setState({ tab: "modeles" }),
+      voirCalendrier: () => this.setState({ tab: "calendrier" }),
+      ongletModeles: this.ongletAdmin(this.state.tab === "modeles"),
+      ongletCalendrier: this.ongletAdmin(this.state.tab === "calendrier"),
+      ouvrirModal: () => {},
+
+      creneauxAdmin: [
+        { heure: "10h00 – 12h00", jauge: "24 couverts sur 30 · 6 places restantes", pct: "80%", couleur: OCRE, statut: "Ouvert", lignes: this.lignes([
+          { nom: "Camille Rivet", pax: 4, tel: "06 12 34 56 78", statut: "Confirmée", creee: "14 sept. 09h41" },
+          { nom: "Antoine Berger", pax: 2, tel: "06 98 76 54 32", statut: "Venue", creee: "12 sept. 20h03" },
+          { nom: "Léa Fontaine", pax: 6, tel: "07 45 12 78 90", statut: "Confirmée", creee: "15 sept. 12h28" },
+          { nom: "Marc Delaunay", pax: 3, tel: "06 22 41 09 55", statut: "Absent", creee: "10 sept. 17h50" }
+        ])},
+        { heure: "12h30 – 14h30", jauge: "30 couverts sur 30 · complet", pct: "100%", couleur: BORD, statut: "Complet", lignes: this.lignes([
+          { nom: "Sophie Navarro", pax: 5, tel: "06 77 31 20 14", statut: "Confirmée", creee: "13 sept. 11h02" },
+          { nom: "Hugo Lemaitre", pax: 2, tel: "07 18 55 63 40", statut: "Annulée client", creee: "09 sept. 08h15" }
+        ])}
+      ],
+      cartesSalle: salle,
+
+      modeles: [
+        { jour: "Samedi", lignes: [
+          { heures: "10h00 – 12h00", capacite: 30, switchFond: VERT, switchX: "19px", actifLabel: "Actif", actifEncre: VERT },
+          { heures: "12h30 – 14h30", capacite: 30, switchFond: VERT, switchX: "19px", actifLabel: "Actif", actifEncre: VERT }
+        ]},
+        { jour: "Dimanche", lignes: [
+          { heures: "10h00 – 12h00", capacite: 30, switchFond: VERT, switchX: "19px", actifLabel: "Actif", actifEncre: VERT },
+          { heures: "12h30 – 14h30", capacite: 24, switchFond: VERT, switchX: "19px", actifLabel: "Actif", actifEncre: VERT },
+          { heures: "15h00 – 17h00", capacite: 20, switchFond: "#d9d4b4", switchX: "3px", actifLabel: "Inactif", actifEncre: GRIS }
+        ]}
+      ],
+      cellulesAdmin: this.cellulesAdmin(),
+
+      aAppeler: [
+        { nom: "Sophie Navarro", pax: 5, tel: "06 77 31 20 14", coche: "✓", caseFond: BORD, caseBordure: BORD, encre: GRIS, etat: "Appelé" },
+        { nom: "Camille Rivet", pax: 4, tel: "06 12 34 56 78", coche: "", caseFond: "transparent", caseBordure: "#b9b39a", encre: BORD, etat: "À appeler" },
+        { nom: "Léa Fontaine", pax: 6, tel: "07 45 12 78 90", coche: "", caseFond: "transparent", caseBordure: "#b9b39a", encre: BORD, etat: "À appeler" },
+        { nom: "Marc Delaunay", pax: 3, tel: "06 22 41 09 55", coche: "", caseFond: "transparent", caseBordure: "#b9b39a", encre: BORD, etat: "À appeler" }
+      ],
+
+      widget: [
+        { jour: "Samedi 19 septembre", couverts: 42, capacite: 60, pct: "70%", couleur: OCRE, detail: "14 réservations · 2 services" },
+        { jour: "Dimanche 20 septembre", couverts: 51, capacite: 54, pct: "94%", couleur: BORD, detail: "17 réservations · presque complet" }
+      ],
+
+      emails: this.emails()
+    };
+  }
+
+  cellulesAdmin() {
+    // Octobre 2026 : 1er octobre = jeudi, 31 jours
+    const cells = [];
+    for (let i = 0; i < 3; i++) cells.push({ num: "", fond: "transparent", bordure: "transparent", encre: "transparent", creneaux: [] });
+    const sam = [3, 10, 17, 24, 31], dim = [4, 11, 18, 25];
+    for (let d = 1; d <= 31; d++) {
+      const estWeekend = sam.includes(d) || dim.includes(d);
+      if (!estWeekend) {
+        cells.push({ num: String(d), fond: "transparent", bordure: "#e0ddc6", encre: "#c4bda6", creneaux: [] });
+        continue;
+      }
+      const ferme = d === 17;
+      const creneaux = [
+        { label: "10h00 · 30", fond: ferme ? "#EFEDDB" : "#EAF0EA", encre: ferme ? GRIS : VERT },
+        { label: ferme ? "12h30 · fermé" : "12h30 · 30", fond: ferme ? "#EFEDDB" : "#EAF0EA", encre: ferme ? GRIS : VERT }
+      ];
+      cells.push({ num: String(d), fond: "#ffffff", bordure: ferme ? "#d9d4b4" : VERT, encre: BORD, creneaux });
+    }
+    return cells;
+  }
+
+  emails() {
+    return [
+      { nom: "1 · Confirmation", objet: "Votre brunch du samedi 19 septembre est confirmé", titre: "Votre table est réservée", corps: "Bonjour Camille, nous vous attendons pour le brunch. Voici le récapitulatif de votre réservation.", lignes: [
+          { k: "Date", v: "Samedi 19 septembre 2026" }, { k: "Heure", v: "10h00 – 12h00" },
+          { k: "Personnes", v: "4" }, { k: "Au nom de", v: "Camille Rivet" }
+        ], motif: "", cta: "Annuler ma réservation", pied: "Annulation en ligne possible jusqu'à 24 h avant. Ensuite, appelez le 01 23 45 67 89." },
+      { nom: "2 · Annulation confirmée", objet: "Votre réservation du 19 septembre est annulée", titre: "Annulation confirmée", corps: "Bonjour Camille, votre réservation a bien été annulée. Nous espérons vous accueillir prochainement.", lignes: [
+          { k: "Date annulée", v: "Samedi 19 septembre 2026" }, { k: "Heure", v: "10h00 – 12h00" }, { k: "Personnes", v: "4" }
+        ], motif: "", cta: "Réserver un nouveau créneau", pied: "Aucune démarche supplémentaire de votre part." },
+      { nom: "3 · Annulation par le restaurant", objet: "Nous devons annuler votre brunch du 11 octobre", titre: "Nous sommes désolés", corps: "Bonjour Camille, nous devons malheureusement annuler le service que vous aviez réservé. Toutes nos excuses pour ce contretemps.", lignes: [
+          { k: "Date annulée", v: "Dimanche 11 octobre 2026" }, { k: "Heure", v: "12h30 – 14h30" }, { k: "Personnes", v: "4" }
+        ], motif: "Fermeture exceptionnelle de la cuisine.", cta: "Choisir un autre créneau", pied: "Une question ? Appelez‑nous au 01 23 45 67 89, nous trouverons une solution." }
+    ];
+  }
+}
+
+</script>
+</body>
+</html>

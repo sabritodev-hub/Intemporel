@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Save, Settings, Eye, Store } from "lucide-react";
+import { Save, Settings, Eye, Store, Phone, CalendarCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -16,10 +17,13 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { updateSiteConfig } from "@/app/actions";
+import { normaliser, afficher } from "@/lib/reservation/telephone";
 
 interface SettingsClientProps {
   initialConfig: Record<string, string>;
 }
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function SettingsClient({ initialConfig }: SettingsClientProps) {
   const router = useRouter();
@@ -30,12 +34,75 @@ export default function SettingsClient({ initialConfig }: SettingsClientProps) {
     show_counter_button: initialConfig.show_counter_button === "true",
     site_name: initialConfig.site_name || "L'Intemporel",
     site_description: initialConfig.site_description || "Bar à Desserts",
+    adresse_restaurant: initialConfig.adresse_restaurant || "",
+    email_contact: initialConfig.email_contact || "",
+    reservations_actives: initialConfig.reservations_actives !== "false",
+    retention_table_min: initialConfig.retention_table_min || "20",
   });
 
+  // Le téléphone est stocké en E.164 mais saisi/affiché au format national.
+  const [telephoneInput, setTelephoneInput] = useState(
+    initialConfig.telephone_restaurant
+      ? afficher(initialConfig.telephone_restaurant)
+      : "",
+  );
+  const [telephoneError, setTelephoneError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  const validerTelephone = (valeur: string) => {
+    if (valeur.trim() === "") {
+      setTelephoneError(null);
+      return true;
+    }
+    if (!normaliser(valeur)) {
+      setTelephoneError("Numéro invalide. Exemple : 06 12 34 56 78.");
+      return false;
+    }
+    setTelephoneError(null);
+    return true;
+  };
+
+  const validerEmail = (valeur: string) => {
+    if (valeur.trim() === "") {
+      setEmailError(null);
+      return true;
+    }
+    if (!EMAIL_RE.test(valeur.trim())) {
+      setEmailError("Adresse email invalide.");
+      return false;
+    }
+    setEmailError(null);
+    return true;
+  };
+
   const handleSave = async () => {
+    const telephoneOk = validerTelephone(telephoneInput);
+    const emailOk = validerEmail(config.email_contact);
+
+    if (!telephoneOk || !emailOk) {
+      toast({
+        title: "Champs invalides",
+        description: "Corrigez les champs en erreur avant d'enregistrer.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const retention = parseInt(config.retention_table_min, 10);
+    if (Number.isNaN(retention) || retention < 0 || retention > 60) {
+      toast({
+        title: "Champ invalide",
+        description: "La durée de rétention de table doit être comprise entre 0 et 60 minutes.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
+      const telephoneE164 = telephoneInput.trim() === "" ? "" : normaliser(telephoneInput) || "";
+
       // Sauvegarder chaque config
       await updateSiteConfig(
         "show_counter_button",
@@ -43,6 +110,14 @@ export default function SettingsClient({ initialConfig }: SettingsClientProps) {
       );
       await updateSiteConfig("site_name", config.site_name);
       await updateSiteConfig("site_description", config.site_description);
+      await updateSiteConfig("telephone_restaurant", telephoneE164);
+      await updateSiteConfig("adresse_restaurant", config.adresse_restaurant);
+      await updateSiteConfig("email_contact", config.email_contact);
+      await updateSiteConfig(
+        "reservations_actives",
+        config.reservations_actives.toString(),
+      );
+      await updateSiteConfig("retention_table_min", retention.toString());
 
       toast({
         title: "Succès",
@@ -163,6 +238,151 @@ export default function SettingsClient({ initialConfig }: SettingsClientProps) {
                   </span>
                 )}
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Coordonnées du restaurant */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 font-playfair text-xl text-bordeaux">
+              <Phone className="h-5 w-5" />
+              Coordonnées du restaurant
+            </CardTitle>
+            <CardDescription>
+              Ces informations apparaissent sur le site, dans les emails et les
+              pages légales. Une modification ici se propage partout.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="telephone_restaurant">Téléphone</Label>
+              <Input
+                id="telephone_restaurant"
+                type="tel"
+                value={telephoneInput}
+                onChange={(e) => setTelephoneInput(e.target.value)}
+                onBlur={(e) => validerTelephone(e.target.value)}
+                placeholder="06 12 34 56 78"
+                aria-invalid={!!telephoneError}
+                aria-describedby={telephoneError ? "telephone_restaurant-erreur" : undefined}
+              />
+              {telephoneError ? (
+                <p
+                  id="telephone_restaurant-erreur"
+                  className="text-[11px] font-semibold text-bordeaux"
+                >
+                  {telephoneError}
+                </p>
+              ) : (
+                <p className="text-sm text-bordeaux/60">
+                  Affiché pour les groupes de plus de 12 personnes et les
+                  annulations de dernière minute
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="adresse_restaurant">Adresse</Label>
+              <Textarea
+                id="adresse_restaurant"
+                rows={2}
+                value={config.adresse_restaurant}
+                onChange={(e) =>
+                  setConfig({ ...config, adresse_restaurant: e.target.value })
+                }
+                placeholder="12 rue des Arts, 69000 Lyon"
+              />
+              <p className="text-sm text-bordeaux/60">
+                Reprise dans les emails et les pages légales
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email_contact">Email de contact</Label>
+              <Input
+                id="email_contact"
+                type="email"
+                value={config.email_contact}
+                onChange={(e) =>
+                  setConfig({ ...config, email_contact: e.target.value })
+                }
+                onBlur={(e) => validerEmail(e.target.value)}
+                placeholder="contact@votre-domaine.fr"
+                aria-invalid={!!emailError}
+                aria-describedby={emailError ? "email_contact-erreur" : undefined}
+              />
+              {emailError ? (
+                <p
+                  id="email_contact-erreur"
+                  className="text-[11px] font-semibold text-bordeaux"
+                >
+                  {emailError}
+                </p>
+              ) : (
+                <p className="text-sm text-bordeaux/60">
+                  Adresse de réponse des emails de réservation
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Réservations */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 font-playfair text-xl text-bordeaux">
+              <CalendarCheck className="h-5 w-5" />
+              Réservations
+            </CardTitle>
+            <CardDescription>
+              Contrôlez l'ouverture des réservations en ligne du brunch
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between rounded-lg border border-bordeaux/20 p-4">
+              <div className="space-y-1">
+                <Label
+                  htmlFor="reservations_actives"
+                  className="text-base font-medium"
+                >
+                  Réservation en ligne
+                </Label>
+                <p className="text-sm text-bordeaux/60">
+                  Désactivée, le bouton Réserver disparaît et la page affiche
+                  le téléphone du restaurant
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-bordeaux/70">
+                  {config.reservations_actives ? "Activée" : "Désactivée"}
+                </span>
+                <Switch
+                  id="reservations_actives"
+                  checked={config.reservations_actives}
+                  onCheckedChange={(checked) =>
+                    setConfig({ ...config, reservations_actives: checked })
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="retention_table_min">
+                Table gardée (minutes)
+              </Label>
+              <Input
+                id="retention_table_min"
+                type="number"
+                min={0}
+                max={60}
+                value={config.retention_table_min}
+                onChange={(e) =>
+                  setConfig({ ...config, retention_table_min: e.target.value })
+                }
+              />
+              <p className="text-sm text-bordeaux/60">
+                Reprise à l'article 3 des conditions de réservation
+              </p>
             </div>
           </CardContent>
         </Card>

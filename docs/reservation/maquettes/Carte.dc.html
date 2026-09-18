@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#F5F5DC; font-family:"Montserrat",sans-serif; color:#800020; }
+  a { color:#800020; text-decoration:none; }
+  a:hover { color:#A0223B; }
+  * { box-sizing:border-box; }
+</style>
+</helmet>
+
+<div style="min-height:100vh; background:#F5F5DC;">
+
+  <header style="position:sticky; top:0; z-index:20; background:#800020; color:#F5F5DC;">
+    <div style="max-width:1180px; margin:0 auto; padding:0 clamp(14px,4vw,24px); height:60px; display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-between; gap:12px;">
+      <a href="#" style="font-family:'Playfair Display',serif; font-size:clamp(17px,4.6vw,20px); font-weight:700; color:#F5F5DC; white-space:nowrap; flex:none;">L'Intemporel</a>
+      <a href="#" style="background:#F5F5DC; color:#800020; border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; white-space:nowrap; min-height:44px; display:flex; align-items:center; flex:none;" style-hover="background:#ffffff;">Réserver</a>
+    </div>
+  </header>
+
+  <section style="max-width:1180px; margin:0 auto; padding:clamp(28px,7vw,56px) clamp(14px,4vw,24px) 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:clamp(14px,3vw,24px);">
+      <div style="max-width:560px;">
+        <div style="font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:#A0223B;">Pâtisserie maison</div>
+        <h1 style="font-family:'Playfair Display',serif; font-size:clamp(34px,9vw,58px); line-height:1.02; margin:12px 0 0; font-weight:600;">Notre carte</h1>
+        <p style="margin:14px 0 0; font-size:15px; line-height:1.65; color:#7d4152; text-wrap:pretty;">Des créations artisanales, préparées chaque matin en petites quantités. La carte évolue au fil des saisons.</p>
+      </div>
+      <div style="font-size:12.5px; color:#7d4152; line-height:1.6;">
+        <div><strong style="color:#800020;">{{ total }}</strong> créations à la carte</div>
+        <div style="margin-top:3px;">Mise à jour le 16 septembre</div>
+      </div>
+    </div>
+  </section>
+
+  <div style="position:sticky; top:60px; z-index:15; background:rgba(245,245,220,.94); backdrop-filter:blur(8px); border-top:1px solid rgba(128,0,32,.1); border-bottom:1px solid rgba(128,0,32,.1);">
+    <div style="max-width:1180px; margin:0 auto; padding:12px clamp(14px,4vw,24px); display:flex; flex-wrap:nowrap; gap:8px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch;">
+      <sc-for list="{{ filtres }}" as="f" hint-placeholder-count="6">
+        <button onClick="{{ f.choisir }}" style="border:1px solid {{ f.bordure }}; background:{{ f.fond }}; color:{{ f.encre }}; border-radius:999px; padding:9px 16px; font-size:13px; font-weight:500; font-family:'Montserrat',sans-serif; cursor:pointer; min-height:44px; display:flex; align-items:center; gap:8px; white-space:nowrap; flex:none;" style-hover="border-color:#800020;">
+          {{ f.label }}<span style="font-size:11px; opacity:.6;">{{ f.compte }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+
+  <section style="max-width:1180px; margin:0 auto; padding:clamp(20px,5vw,32px) clamp(14px,4vw,24px) clamp(56px,10vw,88px);">
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,262px),1fr)); gap:clamp(14px,3vw,22px);">
+      <sc-for list="{{ plats }}" as="p" hint-placeholder-count="8">
+        <article style="display:flex; flex-direction:column; background:#ffffff; border:1px solid #e2dcc0; border-radius:14px; overflow:hidden; cursor:pointer; transition:transform .25s ease, box-shadow .25s ease;" style-hover="transform:translateY(-4px); box-shadow:0 16px 34px rgba(128,0,32,.14);">
+
+          <div style="position:relative; aspect-ratio:16/10; background:{{ p.bandeauFond }}; background-image:{{ p.bandeauMotif }}; border-bottom:1px solid #e2dcc0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:{{ p.bandeauGap }}; padding:18px; text-align:center; overflow:hidden; filter:{{ p.bandeauFiltre }};">
+            <sc-if value="{{ p.aPhoto }}" hint-placeholder-val="{{ true }}">
+              <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+                <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:rgba(128,0,32,.5); background:rgba(245,245,220,.82); border-radius:5px; padding:5px 9px;">photo · {{ p.nom }}</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ p.sansPhoto }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:{{ p.bandeauGap }};">
+                <div style="width:26px; height:1px; background:rgba(128,0,32,.35);"></div>
+                <div style="font-family:'Playfair Display',serif; font-size:{{ p.plaqueTaille }}; line-height:1; font-weight:600; color:#800020; letter-spacing:{{ p.plaqueEspacement }};">{{ p.plaque }}</div>
+                <div style="font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; color:#A0223B;">{{ p.plaqueLegende }}</div>
+                <div style="width:26px; height:1px; background:rgba(128,0,32,.35);"></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ p.indisponible }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute; top:12px; left:12px; background:#800020; color:#F5F5DC; border-radius:999px; padding:5px 11px; font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;">Épuisé</span>
+            </sc-if>
+          </div>
+
+          <div style="padding:16px 17px 17px; display:flex; flex-direction:column; gap:9px; flex:1;">
+            <div style="font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#A0223B;">{{ p.categorie }}</div>
+            <h2 style="font-family:'Playfair Display',serif; font-size:19px; line-height:1.25; margin:0; font-weight:600;">{{ p.nom }}</h2>
+            <p style="margin:0; font-size:12.5px; line-height:1.6; color:#7d4152; text-wrap:pretty;">{{ p.description }}</p>
+            <div style="margin-top:auto; padding-top:13px; border-top:1px solid #f0ead4; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+              <span style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600;">{{ p.prix }}</span>
+              <span style="font-size:12px; font-weight:600; color:#800020; display:flex; align-items:center; gap:6px;">{{ p.action }}<span style="font-size:14px;">→</span></span>
+            </div>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:clamp(28px,6vw,44px); display:flex; flex-wrap:wrap; gap:18px; align-items:center; justify-content:space-between; background:#ffffff; border:1px solid #e2dcc0; border-radius:14px; padding:clamp(18px,4vw,22px) clamp(18px,4vw,24px);">
+      <div style="max-width:540px;">
+        <div style="font-family:'Playfair Display',serif; font-size:20px; font-weight:600;">Une pièce pour une occasion ?</div>
+        <p style="margin:7px 0 0; font-size:13px; line-height:1.6; color:#7d4152;">Gâteaux de fête, formats à partager et commandes spéciales se préparent sur demande, 48 h à l'avance.</p>
+      </div>
+      <a href="tel:+33123456789" style="background:#800020; color:#F5F5DC; border-radius:10px; padding:15px 20px; font-size:14px; font-weight:600; min-height:48px; display:flex; align-items:center; justify-content:center; flex:1 1 220px;" style-hover="background:#600018;">01 23 45 67 89</a>
+    </div>
+  </section>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;traitementSansPhoto&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;options&quot;: [&quot;plaque&quot;, &quot;prix&quot;, &quot;monogramme&quot;],
+    &quot;default&quot;: &quot;plaque&quot;,
+    &quot;tsType&quot;: &quot;\&quot;plaque\&quot; | \&quot;prix\&quot; | \&quot;monogramme\&quot;&quot;,
+    &quot;section&quot;: &quot;Plats sans photo&quot;
+  },
+  &quot;legendeSansPhoto&quot;: {
+    &quot;editor&quot;: &quot;text&quot;,
+    &quot;default&quot;: &quot;Spécialité maison&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;section&quot;: &quot;Plats sans photo&quot;
+  }
+}">
+const PLATS = [
+  { nom: "Fraisier pistache", cat: "Gâteaux", slug: "gateaux", prix: 6.5, photo: true, dispo: true, desc: "Génoise pistache, fraises de saison, crème mousseline légère." },
+  { nom: "Tarte au citron meringuée", cat: "Tartes", slug: "tartes", prix: 5.8, photo: true, dispo: true, desc: "Pâte sablée, crème de citron de Menton, meringue brûlée au chalumeau." },
+  { nom: "Paris-Brest", cat: "Gâteaux", slug: "gateaux", prix: 6.2, photo: false, dispo: true, desc: "Pâte à choux craquelin, crème pralinée aux noisettes torréfiées maison." },
+  { nom: "Mousse chocolat grand cru", cat: "Crèmes & Mousses", slug: "cremes-mousses", prix: 5.4, photo: false, dispo: true, desc: "Chocolat 70 % du Pérou, fleur de sel, éclats de cacao." },
+  { nom: "Tarte aux figues", cat: "Tartes", slug: "tartes", prix: 5.9, photo: true, dispo: true, desc: "Figues violettes rôties au miel, crème d'amande, romarin." },
+  { nom: "Sorbet framboise", cat: "Glaces & Sorbets", slug: "glaces-sorbets", prix: 3.5, photo: false, dispo: true, desc: "Framboises pressées à froid, sans colorant ni arôme ajouté." },
+  { nom: "Crème brûlée à la vanille", cat: "Crèmes & Mousses", slug: "cremes-mousses", prix: 4.8, photo: false, dispo: false, desc: "Vanille de Madagascar, cassonade caramélisée à la commande." },
+  { nom: "Opéra café", cat: "Gâteaux", slug: "gateaux", prix: 6.8, photo: true, dispo: true, desc: "Biscuit Joconde, ganache café, glaçage miroir cacao." },
+  { nom: "Glace praliné", cat: "Glaces & Sorbets", slug: "glaces-sorbets", prix: 3.5, photo: false, dispo: true, desc: "Praliné maison, lait entier fermier, turbinée chaque matin." },
+  { nom: "Chocolat chaud ancien", cat: "Boissons", slug: "boissons", prix: 4.2, photo: false, dispo: true, desc: "Chocolat fondu à la casserole, crème fouettée à part." }
+];
+
+const CATS = [
+  { label: "Gâteaux", slug: "gateaux" },
+  { label: "Tartes", slug: "tartes" },
+  { label: "Crèmes & Mousses", slug: "cremes-mousses" },
+  { label: "Glaces & Sorbets", slug: "glaces-sorbets" },
+  { label: "Boissons", slug: "boissons" }
+];
+
+class Component extends DCLogic {
+  state = { cat: null };
+
+  euro(n) {
+    return n.toFixed(2).replace(".", ",") + " €";
+  }
+
+  // Trois traitements du bandeau quand le plat n'a pas de photo.
+  // Tous conservent le ratio 4/3 et la même bordure : la grille reste alignée.
+  sansPhoto(p, mode) {
+    const rayures = "repeating-linear-gradient(135deg, rgba(128,0,32,.055) 0 1px, transparent 1px 7px)";
+    if (mode === "prix") {
+      return {
+        bandeauFond: "#F5F5DC",
+        bandeauMotif: rayures,
+        plaque: this.euro(p.prix),
+        plaqueTaille: "30px",
+        plaqueEspacement: "-.01em",
+        plaqueLegende: p.cat,
+        bandeauGap: "11px"
+      };
+    }
+    if (mode === "monogramme") {
+      const initiales = p.nom.split(/[\s-]+/).filter(m => m.length > 2).slice(0, 2).map(m => m[0].toUpperCase()).join(" ");
+      return {
+        bandeauFond: "#FBFAF0",
+        bandeauMotif: "none",
+        plaque: initiales,
+        plaqueTaille: "34px",
+        plaqueEspacement: ".08em",
+        plaqueLegende: p.cat,
+        bandeauGap: "13px"
+      };
+    }
+    return {
+      bandeauFond: "#F5F5DC",
+      bandeauMotif: rayures,
+      plaque: p.nom,
+      plaqueTaille: p.nom.length > 22 ? "20px" : "24px",
+      plaqueEspacement: "-.005em",
+      plaqueLegende: "Sans photo",
+      bandeauGap: "12px"
+    };
+  }
+
+  renderVals() {
+    const mode = this.props.traitementSansPhoto ?? "plaque";
+    const legende = this.props.legendeSansPhoto ?? "Spécialité maison";
+    const cat = this.state.cat;
+    const visibles = cat ? PLATS.filter(p => p.slug === cat) : PLATS;
+
+    const filtres = [{ label: "Tous", slug: null, compte: PLATS.length }].concat(
+      CATS.map(c => ({ ...c, compte: PLATS.filter(p => p.slug === c.slug).length }))
+    ).map(f => {
+      const actif = cat === f.slug;
+      return {
+        label: f.label,
+        compte: f.compte,
+        fond: actif ? "#800020" : "transparent",
+        encre: actif ? "#F5F5DC" : "#800020",
+        bordure: actif ? "#800020" : "rgba(128,0,32,.22)",
+        choisir: () => this.setState({ cat: f.slug })
+      };
+    });
+
+    const plats = visibles.map(p => {
+      const base = {
+        nom: p.nom,
+        categorie: p.cat,
+        description: p.desc,
+        prix: this.euro(p.prix),
+        action: p.dispo ? "Personnaliser" : "Bientôt de retour",
+        bandeauFiltre: p.dispo ? "none" : "saturate(.35)",
+        indisponible: !p.dispo,
+        aPhoto: p.photo,
+        sansPhoto: !p.photo
+      };
+      if (p.photo) {
+        return {
+          ...base,
+          bandeauFond: "#EFEDDB",
+          bandeauMotif: "repeating-linear-gradient(135deg, rgba(128,0,32,.09) 0 2px, transparent 2px 9px)",
+          bandeauGap: "0px",
+          plaque: "", plaqueTaille: "24px", plaqueEspacement: "0", plaqueLegende: ""
+        };
+      }
+      const sp = this.sansPhoto(p, mode);
+      if (mode === "plaque") sp.plaqueLegende = legende;
+      return { ...base, ...sp };
+    });
+
+    return { plats, filtres, total: PLATS.length };
+  }
+}
+
+</script>
+</body>
+</html>

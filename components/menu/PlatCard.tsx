@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { formatPrice, getImageUrl } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import { Plat, Category } from "@/types/database.types";
+import BandeauPlat from "./BandeauPlat";
 
 interface PlatCardProps {
   plat: Plat & { categories: Category };
@@ -21,23 +21,9 @@ export default function PlatCard({ plat, onClick }: PlatCardProps) {
       onClick={onClick}
       className="group cursor-pointer overflow-hidden rounded-xl bg-white shadow-md hover:shadow-xl transition-shadow duration-300"
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <Image
-          src={getImageUrl(plat.image)}
-          alt={plat.name}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          unoptimized
-        />
-        {!plat.available && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-            <span className="rounded-full bg-bordeaux px-4 py-2 font-montserrat text-sm font-semibold text-white">
-              Indisponible
-            </span>
-          </div>
-        )}
-        <div className="absolute top-3 left-3">
+      <div className="relative">
+        <BandeauPlat image={plat.image} nom={plat.name} available={plat.available} />
+        <div className="absolute right-3 top-3">
           <span className="rounded-full bg-beige-light/90 px-3 py-1 font-montserrat text-xs font-medium text-bordeaux backdrop-blur-sm">
             {plat.categories?.name}
           </span>
