@@ -57,7 +57,10 @@ export default function MenuContainer({
       />
 
       {/* Plats Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div
+        className="grid gap-6"
+        style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 262px), 1fr))" }}
+      >
         <AnimatePresence mode="popLayout">
           {filteredPlats.map((plat) => (
             <PlatCard

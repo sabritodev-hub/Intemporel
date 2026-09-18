@@ -12,6 +12,8 @@ import {
   X,
   Sliders,
   Eye,
+  CalendarClock,
+  CalendarCheck,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -20,6 +22,8 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/reservations", label: "Réservations", icon: CalendarCheck },
+  { href: "/admin/creneaux", label: "Créneaux", icon: CalendarClock },
   { href: "/admin/plats", label: "Plats", icon: UtensilsCrossed },
   { href: "/admin/categories", label: "Catégories", icon: FolderOpen },
   { href: "/admin/options", label: "Options", icon: Settings },

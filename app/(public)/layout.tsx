@@ -1,5 +1,7 @@
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import BandeauCookies from '@/components/legal/BandeauCookies'
+import PanneauCookies from '@/components/legal/PanneauCookies'
 
 export default function PublicLayout({
   children,
@@ -11,6 +13,8 @@ export default function PublicLayout({
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
+      <BandeauCookies />
+      <PanneauCookies />
     </div>
   )
 }

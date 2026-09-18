@@ -90,8 +90,14 @@ export default function PlatForm({ plat, categories, options }: PlatFormProps) {
     setIsLoading(true)
 
     try {
+      // La validation zod (resolver) garantit ces champs avant l'appel de
+      // onSubmit ; les valeurs de repli ne servent qu'à satisfaire le typage.
       const platData = {
-        ...data,
+        name: data.name ?? '',
+        description: data.description,
+        price: data.price ?? 0,
+        category_id: data.category_id ?? '',
+        available: data.available ?? true,
         image,
         option_ids: selectedOptions,
       }

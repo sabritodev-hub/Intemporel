@@ -6,6 +6,7 @@ import {
   Settings,
   CheckCircle,
 } from "lucide-react";
+import WidgetBrunch from "@/components/admin/WidgetBrunch";
 
 async function getStats() {
   const supabase = createClient();
@@ -86,6 +87,8 @@ export default async function DashboardPage() {
           </Card>
         ))}
       </div>
+
+      <WidgetBrunch />
 
       <Card>
         <CardHeader>
