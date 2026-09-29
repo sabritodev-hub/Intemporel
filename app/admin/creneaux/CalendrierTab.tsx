@@ -223,6 +223,13 @@ export default function CalendrierTab({
                   {selected.couverts_reserves} couverts sur {selected.capacite} · statut{" "}
                   {selected.statut}
                 </p>
+                {selected.statut === "ouvert" && selected.etat === "ferme" && (
+                  <p className="mt-1 text-xs font-semibold text-presque">
+                    Journée déjà passée : ce créneau n'accepte plus de réservation, même si
+                    son statut reste « ouvert » en base. Utilisez « Fermer » seulement pour
+                    empêcher explicitement toute nouvelle réservation avant l'heure de clôture.
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
